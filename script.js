@@ -1,3 +1,98 @@
+// ==========================================
+// VOIDRUN AUDIO SYNTHESIS ENGINE (No files required)
+// ==========================================
+const AudioEngine = {
+    ctx: null,
+
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    },
+
+    // A crisp terminal mechanical keyclick sound
+    playClick() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
+        
+        gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + 0.05);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+    },
+
+    // Glitchy, low down-spiral alarm for Carl's pen meltdown
+    playMeltdown() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(40, this.ctx.currentTime + 0.4);
+        
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.4);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.4);
+    },
+
+    // A chaotic digital explosion slide for the system crash
+    playCrash() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 0.8);
+        
+        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.8);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.8);
+    },
+
+    // A retro golden achievement unlock chord for Iponan success
+    playSuccess() {
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Chord (C4, E4, G4, C5)
+        
+        notes.forEach((freq, index) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + (index * 0.08));
+            
+            gain.gain.setValueAtTime(0.1, now + (index * 0.08));
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.08) + 0.5);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(now + (index * 0.08));
+            osc.stop(now + (index * 0.08) + 0.5);
+        });
+    }
+};
 // --- VOIDRUN OPERATOR CORE UTILITIES ---
 // Location: Iponan Elementary School // Grade 5 Protocols Enabled
 
@@ -7,8 +102,9 @@ let inputBuffer = "";
 // 1. KEYBOARD LISTENER (EASTER EGGS)
 // ==========================================
 window.addEventListener("keydown", (e) => {
-    // Collect keystroke into the evaluation stream
+    AudioEngine.playClick(); // <-- ADD THIS LINE HERE
     inputBuffer += e.key.toLowerCase();
+    // ... rest of your existing keyboard buffer code stays exactly the same
     
     // Safety crop to limit memory overhead
     if (inputBuffer.length > 15) {
@@ -41,7 +137,9 @@ window.addEventListener("keydown", (e) => {
 
 // MIJS Phase 3 Recall Action
 function triggerPenMeltdown() {
+    AudioEngine.playMeltdown(); // <-- ADD THIS LINE HERE
     console.warn("⚠️ SYSTEM EVENT: STATIONERY THEFT FAULT REGISTERED.");
+    // ... rest of your existing code stays the same
     
     document.body.style.transition = "0.3s";
     document.body.style.backgroundColor = "#660000"; // Deep alert red
@@ -54,9 +152,11 @@ function triggerPenMeltdown() {
 
 // Custom Simulator Physics Crash Action
 function triggerCrash() {
+    AudioEngine.playCrash(); // <-- ADD THIS LINE HERE
     console.error("FATAL CRASH: Layout gravity.js engine fault.");
-    
+    // ... rest of your existing code stays the same
     // Collect all modular layout blocks
+    
     const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn');
     
     units.forEach((el) => {
@@ -76,7 +176,9 @@ function triggerCrash() {
 
 // Grade 5 Success Protocol Action
 function triggerIponanSuccess() {
-    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active at Iponan Elementary.");
+    AudioEngine.playSuccess(); // <-- ADD THIS LINE HERE
+    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active.");
+    // ... rest of your existing code stays the same
     
     // Override global border/text accent color to Gold
     document.documentElement.style.setProperty('--accent', '#ffd700');
@@ -176,8 +278,11 @@ window.onload = () => {
 // ==========================================
 // 5. MOBILE TERMINAL INPUT HANDLING
 // ==========================================
-const mobileInput = document.getElementById('terminal-input');
-
+const mobileInput.addEventListener('input', (e) => {
+    AudioEngine.playClick(); // <-- ADD THIS LINE HERE to hear text entry ticks!
+    const text = e.target.value.toLowerCase().trim();
+    // ... rest of your input script code stays the same
+    
 if (mobileInput) {
     mobileInput.addEventListener('input', (e) => {
         const text = e.target.value.toLowerCase().trim();
