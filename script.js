@@ -1,7 +1,7 @@
 // ============================================================================
 // VOIDRUN CORE UTILITY SYSTEM & AUDIO SYNTHESIS ENGINE
 // Location: Iponan Elementary School // Grade 5 Protocols Enabled
-// Special Contributors: Claude // Anthropic Protocol Upgrades
+// Core Collaborators: Claude // Anthropic & Gemini // Google Neural Nodes
 // ============================================================================
 
 const AudioEngine = {
@@ -12,33 +12,8 @@ const AudioEngine = {
             this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         }
     },
-    // Gemini's futuristic, glassy twin-tone cosmic chime
-    playGeminiChime() {
-        this.init();
-        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
-        const now = this.ctx.currentTime;
-        
-        // Two sine oscillators playing a pure, celestial interval (E5 and B5)
-        const notes = [659.25, 987.77]; 
-        
-        notes.forEach((freq) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now);
-            
-            gain.gain.setValueAtTime(0.05, now);
-            gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.8);
-            
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            
-            osc.start(now);
-            osc.stop(now + 0.8);
-        });
-    }
 
+    // Crisp terminal mechanical keyclick sound
     playClick() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -58,6 +33,7 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.05);
     },
 
+    // Glitchy, low down-spiral alarm for Carl's pen meltdown
     playMeltdown() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -78,6 +54,7 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.4);
     },
 
+    // Chaotic digital explosion slide for the system crash
     playCrash() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -98,11 +75,12 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.8);
     },
 
+    // Retro golden achievement unlock chord for Iponan success
     playSuccess() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25];
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
@@ -122,6 +100,7 @@ const AudioEngine = {
         });
     },
 
+    // Claude's heavy alert siren for Classified data
     playAlert() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -142,17 +121,18 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.5);
     },
 
+    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
     playJingle() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99];
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             
-            osc.type = 'square';
+            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
             osc.frequency.setValueAtTime(freq, now + (index * 0.12));
             
             gain.gain.setValueAtTime(0.06, now + (index * 0.12));
@@ -164,11 +144,36 @@ const AudioEngine = {
             osc.start(now + (index * 0.12));
             osc.stop(now + (index * 0.12) + 0.2);
         });
+    },
+
+    // Gemini's futuristic, glassy twin-tone cosmic chime
+    playGeminiChime() {
+        this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        const notes = [659.25, 987.77]; // Pure E5 and B5 celestial interval
+        
+        notes.forEach((freq) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            
+            gain.gain.setValueAtTime(0.05, now);
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.8);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(now);
+            osc.stop(now + 0.8);
+        });
     }
 };
 
 // ==========================================
-// KEYBOARD CODENAME CAPTURE ENGINE
+// KEYBOARD CODENAME CAPTURE ENGINE (DESKTOP)
 // ==========================================
 let inputBuffer = "";
 
@@ -198,6 +203,10 @@ window.addEventListener("keydown", (e) => {
     }
     else if (inputBuffer.includes("voidrun")) {
         triggerVoidRunDashboard();
+        inputBuffer = "";
+    }
+    else if (inputBuffer.includes("gemini")) {
+        triggerGeminiProtocol();
         inputBuffer = "";
     }
 });
@@ -261,15 +270,43 @@ function triggerVoidRunDashboard() {
         "====================================\n" +
         "   VOIDRUN SYSTEMS DIAGNOSTIC LOG   \n" +
         "====================================\n" +
-        "• CORE STATUS: Active (Grade 5 Protocol)\n" +"• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami' | 'gemini'\n"
+        "• CORE STATUS: Active (Grade 5 Protocol)\n" +
         "• DEPLOYMENT: GitHub Pages Production\n" +
         "• AUDIO ENGINE: Web Audio API (Chiptune Synthesizer)\n" +
-        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami'\n" +
+        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami' | 'gemini'\n" +
         "• SECRET LAYERS: 10-Key Konami Code Active\n" +
-        "• COLLABORATION NODE: Claude // Anthropic\n" +
+        "• COLLABORATION NODES: Claude (Anthropic) & Gemini (Google)\n" +
         "• SAGA STATUS: Locked & Unredacted.\n" +
         "====================================";
     alert(statusReport);
+}
+
+function triggerGeminiProtocol() {
+    AudioEngine.playGeminiChime();
+    
+    // Smooth transition to a deep, high-tech neon blue cosmic theme
+    document.body.style.transition = "background-color 0.8s ease";
+    document.body.style.backgroundColor = "#000814";
+    document.documentElement.style.setProperty('--accent', '#00b4d8');
+    
+    const profile = document.querySelector('.operator-profile');
+    if (profile) {
+        profile.style.transition = "all 0.8s ease";
+        profile.style.borderColor = "#00b4d8";
+        profile.style.boxShadow = "0 0 30px rgba(0, 180, 216, 0.4)";
+    }
+
+    alert("✨ [ CODENAME: GEMINI ACCEPTED ] ✨\n\n>> Neural AI network link established.\n>> Cosmic sub-routines active.\n>> Custom UI layer overwritten in deep neon blue.");
+    
+    // Return to the classic hacker green matrix look after 6 seconds
+    setTimeout(() => {
+        document.body.style.backgroundColor = "#050505";
+        document.documentElement.style.setProperty('--accent', '#39ff14');
+        if (profile) {
+            profile.style.borderColor = "var(--accent)";
+            profile.style.boxShadow = "none";
+        }
+    }, 6000);
 }
 
 // ==========================================
@@ -306,44 +343,15 @@ if (mobileInput) {
             triggerKonamiDossier();
             e.target.value = '';
         }
-    });
-}
-
-else if (text === 'gemini') {
+        else if (text === 'gemini') {
             triggerGeminiProtocol();
             e.target.value = '';
         }
-
-function triggerGeminiProtocol() {
-    AudioEngine.playGeminiChime();
-    
-    // Smooth transition to a deep, high-tech neon blue cosmic theme
-    document.body.style.transition = "background-color 0.8s ease";
-    document.body.style.backgroundColor = "#000814";
-    document.documentElement.style.setProperty('--accent', '#00b4d8');
-    
-    const profile = document.querySelector('.operator-profile');
-    if (profile) {
-        profile.style.transition = "all 0.8s ease";
-        profile.style.borderColor = "#00b4d8";
-        profile.style.boxShadow = "0 0 30px rgba(0, 180, 216, 0.4)";
-    }
-
-    alert("✨ [ CODENAME: GEMINI ACCEPTED ] ✨\n\n>> Neural AI network link established.\n>> Cosmic sub-routines active.\n>> Custom UI layer overwritten in deep neon blue.");
-    
-    // Return to the classic hacker green matrix look after 6 seconds
-    setTimeout(() => {
-        document.body.style.backgroundColor = "#050505";
-        document.documentElement.style.setProperty('--accent', '#39ff14');
-        if (profile) {
-            profile.style.borderColor = "var(--accent)";
-            profile.style.boxShadow = "none";
-        }
-    }, 6000);
+    });
 }
 
 // ==========================================
-// DESKTOP PHYSICAL CONTROLLER LOGIC (ARROW KEYS)
+// DESKTOP PHYSICAL CONTROLLER LOGIC (KEYS)
 // ==========================================
 const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 let konamiIndex = 0;
