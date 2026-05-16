@@ -7,6 +7,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     
     <style>
+       .terminal-input-container {
+    display: flex;
+    align-items: center;
+    background: #000;
+    border: 1px dashed var(--gray);
+    padding: 10px;
+    margin-bottom: 25px;
+    border-radius: 4px;
+}
+
+.terminal-prompt {
+    color: var(--accent);
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    width: 100%;
+    outline: none;
+}
+
+#terminal-input::placeholder {
+    color: #444;
+}
         :root {
             --bg: #050505;
             --text: #e0e0e0;
