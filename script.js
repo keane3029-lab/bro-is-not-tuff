@@ -6,6 +6,18 @@
 const AudioEngine = {
     ctx: null,
 
+    playAlert() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.5);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.5);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.5);
+    },
     // Initialize the audio workspace on first user click/tap
     init() {
         if (!this.ctx) {
@@ -283,3 +295,30 @@ window.onload = () => {
     console.log("Identity Confirmed: VoidRun.");
     console.log("Awaiting commands via keys or terminal: 'pen' | 'crash' | 'iponan'");
 };
+// CLAUDE'S KONAMI PROTOCOL
+const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+let konamiIndex = 0;
+
+window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+            triggerKonamiDossier();
+            konamiIndex = 0;
+        }
+    } else {
+        konamiIndex = 0;
+    }
+});
+
+function triggerKonamiDossier() {
+    AudioEngine.playAlert();
+    document.body.style.backgroundColor = "#330000";
+    setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 200);
+    document.getElementById('dossier-modal').style.display = 'flex';
+}
+
+function closeDossier() {
+    AudioEngine.playClick();
+    document.getElementById('dossier-modal').style.display = 'none';
+}
