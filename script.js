@@ -173,3 +173,27 @@ window.onload = () => {
     console.log("Current School Node: Iponan Elementary (Grade 5).");
     console.log("Awaiting hotkeys: 'pen' | 'crash' | 'iponan'");
 };
+// ==========================================
+// 5. MOBILE TERMINAL INPUT HANDLING
+// ==========================================
+const mobileInput = document.getElementById('terminal-input');
+
+if (mobileInput) {
+    mobileInput.addEventListener('input', (e) => {
+        const text = e.target.value.toLowerCase().trim();
+        
+        // Check for triggers instantly as they type
+        if (text === 'pen') {
+            triggerPenMeltdown();
+            e.target.value = ''; // Reset input field
+        } 
+        else if (text === 'crash') {
+            triggerCrash();
+            e.target.value = '';
+        } 
+        else if (text === 'iponan') {
+            triggerIponanSuccess();
+            e.target.value = '';
+        }
+    });
+}
