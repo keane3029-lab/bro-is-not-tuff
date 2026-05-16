@@ -1,9 +1,12 @@
-// ==========================================
-// VOIDRUN AUDIO SYNTHESIS ENGINE (No files required)
-// ==========================================
+// ============================================================================
+// VOIDRUN CORE UTILITY SYSTEM & AUDIO SYNTHESIS ENGINE
+// Location: Iponan Elementary School // Grade 5 Protocols Enabled
+// ============================================================================
+
 const AudioEngine = {
     ctx: null,
 
+    // Initialize the audio workspace on first user click/tap
     init() {
         if (!this.ctx) {
             this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -13,13 +16,14 @@ const AudioEngine = {
     // A crisp terminal mechanical keyclick sound
     playClick() {
         this.init();
+        if (this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
         osc.type = 'sine';
         osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
         
-        gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + 0.05);
         
         osc.connect(gain);
@@ -36,10 +40,10 @@ const AudioEngine = {
         const gain = this.ctx.createGain();
         
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(160, this.ctx.currentTime);
         osc.frequency.linearRampToValueAtTime(40, this.ctx.currentTime + 0.4);
         
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.4);
         
         osc.connect(gain);
@@ -56,10 +60,10 @@ const AudioEngine = {
         const gain = this.ctx.createGain();
         
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+        osc.frequency.setValueAtTime(450, this.ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 0.8);
         
-        gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.8);
         
         osc.connect(gain);
@@ -73,7 +77,7 @@ const AudioEngine = {
     playSuccess() {
         this.init();
         const now = this.ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Chord (C4, E4, G4, C5)
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio (C, E, G, C)
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
@@ -82,105 +86,88 @@ const AudioEngine = {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now + (index * 0.08));
             
-            gain.gain.setValueAtTime(0.1, now + (index * 0.08));
-            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.08) + 0.5);
+            gain.gain.setValueAtTime(0.08, now + (index * 0.08));
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.08) + 0.6);
             
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             
             osc.start(now + (index * 0.08));
-            osc.stop(now + (index * 0.08) + 0.5);
+            osc.stop(now + (index * 0.08) + 0.6);
         });
     }
 };
-// --- VOIDRUN OPERATOR CORE UTILITIES ---
-// Location: Iponan Elementary School // Grade 5 Protocols Enabled
 
+// ==========================================
+// KEYBOARD CODENAME CAPTURE ENGINE
+// ==========================================
 let inputBuffer = "";
 
-// ==========================================
-// 1. KEYBOARD LISTENER (EASTER EGGS)
-// ==========================================
 window.addEventListener("keydown", (e) => {
-    AudioEngine.playClick(); // <-- ADD THIS LINE HERE
-    inputBuffer += e.key.toLowerCase();
-    // ... rest of your existing keyboard buffer code stays exactly the same
+    // Generate keypress click sound dynamically
+    AudioEngine.playClick();
     
-    // Safety crop to limit memory overhead
+    inputBuffer += e.key.toLowerCase();
+    
     if (inputBuffer.length > 15) {
         inputBuffer = inputBuffer.substring(1);
     }
 
-    // TRIGGER 1: "pen" (Carl's Meltdown Simulation)
     if (inputBuffer.includes("pen")) {
         triggerPenMeltdown();
         inputBuffer = ""; 
     }
-
-    // TRIGGER 2: "crash" (Physics Gravity Engine Drop)
-    if (inputBuffer.includes("crash")) {
+    else if (inputBuffer.includes("crash")) {
         triggerCrash();
         inputBuffer = ""; 
     }
-
-    // TRIGGER 3: "iponan" (Grade 5 Status Unlocked)
-    if (inputBuffer.includes("iponan")) {
+    else if (inputBuffer.includes("iponan")) {
         triggerIponanSuccess();
         inputBuffer = "";
     }
 });
 
-
 // ==========================================
-// 2. ACTION DEFINITIONS FOR COMMANDS
+// TRIGGER ACTIONS
 // ==========================================
 
-// MIJS Phase 3 Recall Action
 function triggerPenMeltdown() {
-    AudioEngine.playMeltdown(); // <-- ADD THIS LINE HERE
+    AudioEngine.playMeltdown();
     console.warn("⚠️ SYSTEM EVENT: STATIONERY THEFT FAULT REGISTERED.");
-    // ... rest of your existing code stays the same
     
     document.body.style.transition = "0.3s";
-    document.body.style.backgroundColor = "#660000"; // Deep alert red
+    document.body.style.backgroundColor = "#660000"; 
     
     setTimeout(() => {
         alert("SYSTEM ERROR: Carl is screaming about a stolen pen again! (Phase 3 Loaded)");
-        document.body.style.backgroundColor = "#050505"; // Recover background
+        document.body.style.backgroundColor = "#050505"; 
     }, 500);
 }
 
-// Custom Simulator Physics Crash Action
 function triggerCrash() {
-    AudioEngine.playCrash(); // <-- ADD THIS LINE HERE
+    AudioEngine.playCrash();
     console.error("FATAL CRASH: Layout gravity.js engine fault.");
-    // ... rest of your existing code stays the same
-    // Collect all modular layout blocks
     
-    const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn');
+    const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn, .terminal-input-container');
     
     units.forEach((el) => {
-        const randomX = Math.floor(Math.random() * 400) - 200; // Left-Right slide range
-        const randomSpin = Math.floor(Math.random() * 120) - 60; // Spin angles
+        const randomX = Math.floor(Math.random() * 400) - 200; 
+        const randomSpin = Math.floor(Math.random() * 120) - 60; 
         
         el.style.transition = "transform 2s cubic-bezier(0.47, 0, 0.745, 0.715), opacity 1.5s";
-        el.style.transform = `translate(${randomX}px, 1200px) rotate(${randomSpin}deg)`; // Fall downward offscreen
+        el.style.transform = `translate(${randomX}px, 1200px) rotate(${randomSpin}deg)`; 
         el.style.opacity = "0";
     });
 
-    // Forced terminal recovery reboot after 4 seconds
     setTimeout(() => {
         location.reload();
     }, 4000);
 }
 
-// Grade 5 Success Protocol Action
 function triggerIponanSuccess() {
-    AudioEngine.playSuccess(); // <-- ADD THIS LINE HERE
-    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active.");
-    // ... rest of your existing code stays the same
+    AudioEngine.playSuccess();
+    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active at Iponan Elementary.");
     
-    // Override global border/text accent color to Gold
     document.documentElement.style.setProperty('--accent', '#ffd700');
     
     const profile = document.querySelector('.operator-profile');
@@ -193,7 +180,6 @@ function triggerIponanSuccess() {
 
     alert("WELCOME TO IPONAN GRADE 5: Operator has unlocked Gold Class status.");
     
-    // Auto restore to baseline stealth green styling after 5 seconds
     setTimeout(() => {
         document.documentElement.style.setProperty('--accent', '#39ff14');
         if (profile) {
@@ -204,16 +190,43 @@ function triggerIponanSuccess() {
     }, 5000);
 }
 
+// ==========================================
+// MOBILE TERMINAL USER INTERFACE INPUT
+// ==========================================
+const mobileInput = document.getElementById('terminal-input');
+
+if (mobileInput) {
+    mobileInput.addEventListener('input', (e) => {
+        // Play click audio tracking each keypad strike
+        AudioEngine.playClick();
+        
+        const text = e.target.value.toLowerCase().trim();
+        
+        if (text === 'pen') {
+            triggerPenMeltdown();
+            e.target.value = ''; 
+        } 
+        else if (text === 'crash') {
+            triggerCrash();
+            e.target.value = '';
+        } 
+        else if (text === 'iponan') {
+            triggerIponanSuccess();
+            e.target.value = '';
+        }
+    });
+}
 
 // ==========================================
-// 3. TEXT ARCHIVE EXPORT UTILITY
+// TEXT ARCHIVE LOCAL FILE COMPILER (.txt)
 // ==========================================
 document.getElementById('download-btn').addEventListener('click', () => {
-    // Compiling raw string payload for text backup file
+    AudioEngine.playClick();
+    
     const logContent = `==================================================
 VOIDRUN SYSTEMS | OFFICIAL SECURE RECORD ARCHIVE
 CASE DATA: BRO IS NOT TUFF (THE COMPLETE SAGA)
-STATION TIMELINE: MIJS RECOREDS -> IPONAN GRADE 5
+STATION TIMELINE: MIJS RECORDS -> IPONAN GRADE 5
 ==================================================
 
 Phase 1: The Anthem
@@ -246,59 +259,27 @@ Carl stood there, realized he’d lost his power, his reputation, and his "tough
 LOG EXPORT COMPLETE // RECORD LOCKED BY OPERATOR VOIDRUN
 ==================================================`;
 
-    // Process a local memory pointer file stream
     const dataBlob = new Blob([logContent], { type: 'text/plain' });
     const pointerUrl = URL.createObjectURL(dataBlob);
     
-    // Form temporary synthetic link trigger
     const silentLink = document.createElement('a');
     silentLink.href = pointerUrl;
-    silentLink.download = 'bro is not tuff.txt'; // Custom clean filename match
+    silentLink.download = 'bro is not tuff.txt'; 
     
     document.body.appendChild(silentLink);
-    silentLink.click(); // Automate device downloads directory placement
+    silentLink.click(); 
     
-    // Reclaim memory pipeline
     document.body.removeChild(silentLink);
     URL.revokeObjectURL(pointerUrl);
     
     console.log("💾 Log package compiled and saved locally as 'bro is not tuff.txt'.");
 });
 
-
 // ==========================================
-// 4. CORE SYSTEM INITIALIZATION
+// INITIALIZE SYSTEM NODE
 // ==========================================
 window.onload = () => {
     console.log("%c [SYSTEM ONLINE] ", "color: #39ff14; font-weight: bold; background: #000; padding: 2px; border: 1px solid #39ff14;");
     console.log("Identity Confirmed: VoidRun.");
-    console.log("Current School Node: Iponan Elementary (Grade 5).");
-    console.log("Awaiting hotkeys: 'pen' | 'crash' | 'iponan'");
+    console.log("Awaiting commands via keys or terminal: 'pen' | 'crash' | 'iponan'");
 };
-// ==========================================
-// 5. MOBILE TERMINAL INPUT HANDLING
-// ==========================================
-const mobileInput.addEventListener('input', (e) => {
-    AudioEngine.playClick(); // <-- ADD THIS LINE HERE to hear text entry ticks!
-    const text = e.target.value.toLowerCase().trim();
-    // ... rest of your input script code stays the same
-    
-if (mobileInput) {
-    mobileInput.addEventListener('input', (e) => {
-        const text = e.target.value.toLowerCase().trim();
-        
-        // Check for triggers instantly as they type
-        if (text === 'pen') {
-            triggerPenMeltdown();
-            e.target.value = ''; // Reset input field
-        } 
-        else if (text === 'crash') {
-            triggerCrash();
-            e.target.value = '';
-        } 
-        else if (text === 'iponan') {
-            triggerIponanSuccess();
-            e.target.value = '';
-        }
-    });
-}
