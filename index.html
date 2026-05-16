@@ -1,5 +1,4 @@
-
-            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -270,6 +269,71 @@
         strong { color: #fff; }
         em { color: var(--warning); font-style: normal; font-weight: bold; }
 
+        /* Claude's Text Glitch Effect */
+        .glitch-text {
+            animation: textFlicker 3s infinite;
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        @keyframes textFlicker {
+            0%, 93%, 95%, 100% { opacity: 1; filter: none; }
+            94% { opacity: 0.3; filter: hue-rotate(90deg) blur(1px); color: var(--accent); }
+            96% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--warning)); }
+        }
+
+        /* Classified Dossier Popup Layout */
+        .dossier-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .dossier-box {
+            background: #0d0d0d;
+            border: 3px double var(--warning);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 62, 62, 0.3);
+        }
+
+        .classified-stamp {
+            position: absolute;
+            top: 15px; right: 15px;
+            border: 3px solid var(--warning);
+            color: var(--warning);
+            font-family: 'Oswald', sans-serif;
+            padding: 5px 15px;
+            transform: rotate(15deg);
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .redacted {
+            background: #fff;
+            color: #fff;
+            padding: 0 4px;
+            user-select: none;
+        }
+
+        .close-dossier-btn {
+            background: var(--warning);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            font-family: 'Fira Code', monospace;
+        }
+
         /* Responsive Fixes */
         @media (max-width: 650px) {
             h1 { font-size: 1.8rem; }
@@ -278,70 +342,6 @@
             .bio { border-left: none; padding-left: 0; }
             .status-pulse { justify-content: center; }
         }
-                /* Claude's Text Glitch Effect */
-.glitch-text {
-    animation: textFlicker 3s infinite;
-    color: var(--warning);
-    font-weight: bold;
-}
-
-@keyframes textFlicker {
-    0%, 93%, 95%, 100% { opacity: 1; filter: none; }
-    94% { opacity: 0.3; filter: hue-rotate(90deg) blur(1px); color: var(--accent); }
-    96% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--warning)); }
-}
-
-/* Classified Dossier Popup Layout */
-.dossier-overlay {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Fira Code', monospace;
-}
-
-.dossier-box {
-    background: #0d0d0d;
-    border: 3px double var(--warning);
-    padding: 30px;
-    max-width: 500px;
-    width: 90%;
-    position: relative;
-    box-shadow: 0 0 30px rgba(255, 62, 62, 0.3);
-}
-
-.classified-stamp {
-    position: absolute;
-    top: 15px; right: 15px;
-    border: 3px solid var(--warning);
-    color: var(--warning);
-    font-family: 'Oswald', sans-serif;
-    padding: 5px 15px;
-    transform: rotate(15deg);
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.redacted {
-    background: #fff;
-    color: #fff;
-    padding: 0 4px;
-    user-select: none;
-}
-
-.close-dossier-btn {
-    background: var(--warning);
-    color: #000;
-    border: none;
-    padding: 8px 15px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
-    font-family: 'Fira Code', monospace;
-}
     </style>
 </head>
 <body>
@@ -385,10 +385,8 @@
 
             <div class="file-header">
                 <span class="confidential">DECRYPTED HISTORICAL DATA</span>
-              <h1>THE COMPLETE SAGA: "BRO IS NOT <span class="glitch-text">TUFF</span>"</h1>
-               <p><strong>SUBJECT:</strong> CARL | <strong>INTEL LEVEL:</strong> GRADE 4 RECORD</p>
-                        
-                
+                <h1>THE COMPLETE SAGA: "BRO IS NOT <span class="glitch-text">TUFF</span>"</h1>
+                <p><strong>SUBJECT:</strong> CARL | <strong>INTEL LEVEL:</strong> GRADE 4 RECORD</p>
                 <button id="download-btn">> DOWNLOAD_OFFLINE_LOG</button>
             </div>
 
@@ -424,19 +422,20 @@
         </section>
     </main>
 
+    <div id="dossier-modal" class="dossier-overlay">
+        <div class="dossier-box">
+            <div class="classified-stamp">CLASSIFIED</div>
+            <h2 style="color: var(--warning); font-family: 'Oswald', sans-serif; margin-top:0;">SUBJECT: CARL DOSSIER</h2>
+            <hr style="border-color: var(--warning); margin-bottom:15px;">
+            <p><strong>REAL NAME:</strong> Carl <span class="redacted">REDACTED</span></p>
+            <p><strong>KNOWN ALIASES:</strong> The "Tuff" Guy, Stationery Whisperer</p>
+            <p><strong>THREAT LEVEL:</strong> <span style="color: yellow;">LOW</span> (High risk of screaming over pens)</p>
+            <p><strong>PSYCHOLOGICAL EVALUATION:</strong> Subject exhibits severe ego displacement when musical tracks are deployed. Prone to hallway ambushes but easily countered by a <span class="redacted">TEAMMATES_SHIELD</span> counter-measure.</p>
+            <p><strong>CURRENT STATUS:</strong> Defeated by VoidRun track layers. Reputational status permanently set to offline.</p>
+            <button class="close-dossier-btn" onclick="closeDossier()">[ CLOSE PROTOCOL ]</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
-<div id="dossier-modal" class="dossier-overlay">
-    <div class="dossier-box">
-        <div class="classified-stamp">CLASSIFIED</div>
-        <h2 style="color: var(--warning); font-family: 'Oswald', sans-serif;">SUBJECT: CARL DOSSIER</h2>
-        <hr style="border-color: var(--warning);">
-        <p><strong>REAL NAME:</strong> Carl <span class="redacted">REDACTED</span></p>
-        <p><strong>KNOWN ALIASES:</strong> The "Tuff" Guy, Stationery Whiperer</p>
-        <p><strong>THREAT LEVEL:</strong> <span style="color: yellow;">LOW</span> (High risk of screaming over pens)</p>
-        <p><strong>PSYCHOLOGICAL EVALUATION:</strong> Subject exhibits severe ego displacement when musical tracks are deployed. Prone to hallway ambushes but easily countered by a <span class="redacted">TEAMMATES_SHIELD</span> counter-measure.</p>
-        <p><strong>CURRENT STATUS:</strong> Defeated by VoidRun track layers. Reputational status permanently set to offline.</p>
-        <button class="close-dossier-btn" onclick="closeDossier()">[ CLOSE PROTOCOL ]</button>
-    </div>
-</div>
