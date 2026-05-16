@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+            <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,37 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
     
     <style>
-       .terminal-input-container {
-    display: flex;
-    align-items: center;
-    background: #000;
-    border: 1px dashed var(--gray);
-    padding: 10px;
-    margin-bottom: 25px;
-    border-radius: 4px;
-}
-
-.terminal-prompt {
-    color: var(--accent);
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 0.85rem;
-    white-space: nowrap;
-}
-
-#terminal-input {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.85rem;
-    width: 100%;
-    outline: none;
-}
-
-#terminal-input::placeholder {
-    color: #444;
-}
         :root {
             --bg: #050505;
             --text: #e0e0e0;
@@ -194,6 +164,39 @@
             padding-bottom: 20px;
         }
 
+        /* Terminal input style */
+        .terminal-input-container {
+            display: flex;
+            align-items: center;
+            background: #000;
+            border: 1px dashed var(--gray);
+            padding: 10px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+
+        .terminal-prompt {
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        #terminal-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+        }
+
+        #terminal-input::placeholder {
+            color: #444;
+        }
+
         .confidential {
             background: var(--warning);
             color: #000;
@@ -275,37 +278,6 @@
             .bio { border-left: none; padding-left: 0; }
             .status-pulse { justify-content: center; }
         }
-        .terminal-input-container {
-    display: flex;
-    align-items: center;
-    background: #000;
-    border: 1px dashed var(--gray);
-    padding: 10px;
-    margin-bottom: 25px;
-    border-radius: 4px;
-}
-
-.terminal-prompt {
-    color: var(--accent);
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 0.85rem;
-    white-space: nowrap;
-}
-
-#terminal-input {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.85rem;
-    width: 100%;
-    outline: none;
-}
-
-#terminal-input::placeholder {
-    color: #444;
-}
     </style>
 </head>
 <body>
@@ -341,17 +313,18 @@
 
     <main>
         <section id="saga" class="case-file">
+            
+            <div class="terminal-input-container">
+                <span class="terminal-prompt">voidrun@system:~#</span>
+                <input type="text" id="terminal-input" placeholder="ENTER CODENAME..." autocomplete="off" autocapitalize="none">
+            </div>
+
             <div class="file-header">
-                
                 <span class="confidential">DECRYPTED HISTORICAL DATA</span>
                 <h1>THE COMPLETE SAGA: "BRO IS NOT TUFF"</h1>
                 <p><strong>SUBJECT:</strong> CARL | <strong>INTEL LEVEL:</strong> GRADE 4 RECORD</p>
                 
                 <button id="download-btn">> DOWNLOAD_OFFLINE_LOG</button>
-                <div class="terminal-input-container">
-    <span class="terminal-prompt">voidrun@system:~#</span>
-    <input type="text" id="terminal-input" placeholder="ENTER CODENAME..." autocomplete="off" autocapitalize="none">
-</div>
             </div>
 
             <div class="phase">
