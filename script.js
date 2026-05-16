@@ -13,10 +13,9 @@ const AudioEngine = {
         }
     },
 
-    // Crisp terminal mechanical keyclick sound
     playClick() {
         this.init();
-        if (this.ctx.state === 'suspended') this.ctx.resume();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
@@ -33,9 +32,9 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.05);
     },
 
-    // Glitchy, low down-spiral alarm for Carl's pen meltdown
     playMeltdown() {
         this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
@@ -53,9 +52,9 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.4);
     },
 
-    // Chaotic digital explosion slide for the system crash
     playCrash() {
         this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
@@ -73,11 +72,11 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.8);
     },
 
-    // Retro golden achievement unlock chord for Iponan success
     playSuccess() {
         this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio
+        const notes = [261.63, 329.63, 392.00, 523.25];
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
@@ -97,9 +96,9 @@ const AudioEngine = {
         });
     },
 
-    // Claude's heavy alert siren for Classified data
     playAlert() {
         this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         
@@ -117,17 +116,17 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.5);
     },
 
-    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
     playJingle() {
         this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
+        const notes = [523.25, 659.25, 783.99];
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             
-            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
+            osc.type = 'square';
             osc.frequency.setValueAtTime(freq, now + (index * 0.12));
             
             gain.gain.setValueAtTime(0.06, now + (index * 0.12));
@@ -183,7 +182,6 @@ window.addEventListener("keydown", (e) => {
 
 function triggerPenMeltdown() {
     AudioEngine.playMeltdown();
-    console.warn("⚠️ SYSTEM EVENT: STATIONERY THEFT FAULT REGISTERED.");
     document.body.style.transition = "0.3s";
     document.body.style.backgroundColor = "#660000"; 
     setTimeout(() => {
@@ -194,8 +192,6 @@ function triggerPenMeltdown() {
 
 function triggerCrash() {
     AudioEngine.playCrash();
-    console.error("FATAL CRASH: Layout gravity.js engine fault.");
-    
     const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn, .terminal-input-container');
     units.forEach((el) => {
         const randomX = Math.floor(Math.random() * 400) - 200; 
@@ -204,15 +200,12 @@ function triggerCrash() {
         el.style.transform = `translate(${randomX}px, 1200px) rotate(${randomSpin}deg)`; 
         el.style.opacity = "0";
     });
-
     setTimeout(() => { location.reload(); }, 4000);
 }
 
 function triggerIponanSuccess() {
     AudioEngine.playSuccess();
-    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active.");
     document.documentElement.style.setProperty('--accent', '#ffd700');
-    
     const profile = document.querySelector('.operator-profile');
     if (profile) {
         profile.style.transition = "0.5s ease";
@@ -220,9 +213,7 @@ function triggerIponanSuccess() {
         profile.style.borderColor = "#ffd700";
         profile.style.boxShadow = "0 0 25px rgba(255, 215, 0, 0.35)";
     }
-
     alert("WELCOME TO IPONAN GRADE 5: Operator has unlocked Gold Class status.");
-    
     setTimeout(() => {
         document.documentElement.style.setProperty('--accent', '#39ff14');
         if (profile) {
@@ -235,12 +226,11 @@ function triggerIponanSuccess() {
 
 function triggerClaudeSignature() {
     AudioEngine.playSuccess();
-    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGROPED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
+    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGGESTED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
 }
 
 function triggerVoidRunDashboard() {
     AudioEngine.playJingle();
-    
     const statusReport = 
         "====================================\n" +
         "   VOIDRUN SYSTEMS DIAGNOSTIC LOG   \n" +
@@ -253,9 +243,7 @@ function triggerVoidRunDashboard() {
         "• COLLABORATION NODE: Claude // Anthropic\n" +
         "• SAGA STATUS: Locked & Unredacted.\n" +
         "====================================";
-        
     alert(statusReport);
-    console.log("%c" + statusReport, "color: #39ff14; font-family: monospace;");
 }
 
 // ==========================================
@@ -288,7 +276,7 @@ if (mobileInput) {
             triggerVoidRunDashboard();
             e.target.value = '';
         }
-        else if (text === 'konami') { // MOBILE OVERRIDE FOR DOSSIER
+        else if (text === 'konami') {
             triggerKonamiDossier();
             e.target.value = '';
         }
@@ -317,46 +305,32 @@ function triggerKonamiDossier() {
     AudioEngine.playAlert();
     document.body.style.backgroundColor = "#330000";
     setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 200);
-    document.getElementById('dossier-modal').style.display = 'flex';
+    const modal = document.getElementById('dossier-modal');
+    if (modal) modal.style.display = 'flex';
 }
 
 function closeDossier() {
     AudioEngine.playClick();
-    document.getElementById('dossier-modal').style.display = 'none';
+    const modal = document.getElementById('dossier-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 // ==========================================
 // TEXT ARCHIVE LOCAL FILE COMPILER (.txt)
 // ==========================================
-document.getElementById('download-btn').addEventListener('click', () => {
-    AudioEngine.playClick();
-    
-    const logContent = `==================================================
-VOIDRUN SYSTEMS | OFFICIAL SECURE RECORD ARCHIVE
-CASE DATA: BRO IS NOT TUFF (THE COMPLETE SAGA)
-STATION TIMELINE: MIJS RECORDS -> IPONAN GRADE 5
-==================================================
-
-[Content Locked Archive Log Complete]`;
-
-    const dataBlob = new Blob([logContent], { type: 'text/plain' });
-    const pointerUrl = URL.createObjectURL(dataBlob);
-    
-    const silentLink = document.createElement('a');
-    silentLink.href = pointerUrl;
-    silentLink.download = 'bro is not tuff.txt'; 
-    
-    document.body.appendChild(silentLink);
-    silentLink.click(); 
-    
-    document.body.removeChild(silentLink);
-    URL.revokeObjectURL(pointerUrl);
-});
-
-// ==========================================
-// INITIALIZE SYSTEM NODE
-// ==========================================
-window.onload = () => {
-    console.log("%c [SYSTEM ONLINE] ", "color: #39ff14; font-weight: bold; background: #000; padding: 2px; border: 1px solid #39ff14;");
-    console.log("Identity Confirmed: VoidRun.");
-};
+const downBtn = document.getElementById('download-btn');
+if (downBtn) {
+    downBtn.addEventListener('click', () => {
+        AudioEngine.playClick();
+        const logContent = `==================================================\nVOIDRUN SYSTEMS | OFFICIAL SECURE RECORD ARCHIVE\n==================================================\n\n[Content Locked Archive Log Complete]`;
+        const dataBlob = new Blob([logContent], { type: 'text/plain' });
+        const pointerUrl = URL.createObjectURL(dataBlob);
+        const silentLink = document.createElement('a');
+        silentLink.href = pointerUrl;
+        silentLink.download = 'bro is not tuff.txt'; 
+        document.body.appendChild(silentLink);
+        silentLink.click(); 
+        document.body.removeChild(silentLink);
+        URL.revokeObjectURL(pointerUrl);
+    });
+}
