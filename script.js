@@ -7,6 +7,29 @@
 const AudioEngine = {
     ctx: null,
 
+    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
+    playJingle() {
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
+        
+        notes.forEach((freq, index) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
+            osc.frequency.setValueAtTime(freq, now + (index * 0.12));
+            
+            gain.gain.setValueAtTime(0.06, now + (index * 0.12));
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.12) + 0.2);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(now + (index * 0.12));
+            osc.stop(now + (index * 0.12) + 0.2);
+        });
+    }
     init() {
         if (!this.ctx) {
             this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -125,6 +148,10 @@ let inputBuffer = "";
 
 window.addEventListener("keydown", (e) => {
     AudioEngine.playClick();
+    else if (inputBuffer.includes("voidrun")) {
+        triggerVoidRunDashboard();
+        inputBuffer = "";
+    }
     
     inputBuffer += e.key.toLowerCase();
     if (inputBuffer.length > 15) {
@@ -210,6 +237,25 @@ function triggerClaudeSignature() {
     alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGGESTED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
 }
 
+function triggerVoidRunDashboard() {
+    AudioEngine.playJingle();
+    
+    const statusReport = 
+        "====================================\n" +
+        "   VOIDRUN SYSTEMS DIAGNOSTIC LOG   \n" +
+        "====================================\n" +
+        "• CORE CORE: Active (Grade 5 Protocol)\n" +
+        "• DEPLOYMENT: GitHub Pages Production\n" +
+        "• AUDIO ENGINE: Web Audio API (Chiptune Synthesizer)\n" +
+        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun'\n" +
+        "• SECRET LAYERS: 10-Key Konami Code Active\n" +
+        "• COLLABORATION NODE: Claude // Anthropic\n" +
+        "• SAGA STATUS: Locked & Unredacted.\n" +
+        "====================================";
+        
+    alert(statusReport);
+    console.log("%c" + statusReport, "color: #39ff14; font-family: monospace;");
+}
 // ==========================================
 // MOBILE TERMINAL USER INTERFACE INPUT
 // ==========================================
