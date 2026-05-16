@@ -1,31 +1,19 @@
 // ============================================================================
 // VOIDRUN CORE UTILITY SYSTEM & AUDIO SYNTHESIS ENGINE
 // Location: Iponan Elementary School // Grade 5 Protocols Enabled
+// Special Contributors: Claude // Anthropic Protocol Upgrades
 // ============================================================================
 
 const AudioEngine = {
     ctx: null,
 
-    playAlert() {
-        this.init();
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.5);
-        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.5);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(); osc.stop(this.ctx.currentTime + 0.5);
-    },
-    // Initialize the audio workspace on first user click/tap
     init() {
         if (!this.ctx) {
             this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         }
     },
 
-    // A crisp terminal mechanical keyclick sound
+    // Crisp terminal mechanical keyclick sound
     playClick() {
         this.init();
         if (this.ctx.state === 'suspended') this.ctx.resume();
@@ -65,7 +53,7 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.4);
     },
 
-    // A chaotic digital explosion slide for the system crash
+    // Chaotic digital explosion slide for the system crash
     playCrash() {
         this.init();
         const osc = this.ctx.createOscillator();
@@ -85,11 +73,11 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 0.8);
     },
 
-    // A retro golden achievement unlock chord for Iponan success
+    // Retro golden achievement unlock chord for Iponan success
     playSuccess() {
         this.init();
         const now = this.ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio (C, E, G, C)
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
@@ -107,6 +95,26 @@ const AudioEngine = {
             osc.start(now + (index * 0.08));
             osc.stop(now + (index * 0.08) + 0.6);
         });
+    },
+
+    // Claude's heavy alert siren for Classified data
+    playAlert() {
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.5);
+        
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.5);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.5);
     }
 };
 
@@ -116,11 +124,9 @@ const AudioEngine = {
 let inputBuffer = "";
 
 window.addEventListener("keydown", (e) => {
-    // Generate keypress click sound dynamically
     AudioEngine.playClick();
     
     inputBuffer += e.key.toLowerCase();
-    
     if (inputBuffer.length > 15) {
         inputBuffer = inputBuffer.substring(1);
     }
@@ -137,6 +143,10 @@ window.addEventListener("keydown", (e) => {
         triggerIponanSuccess();
         inputBuffer = "";
     }
+    else if (inputBuffer.includes("claude")) {
+        triggerClaudeSignature();
+        inputBuffer = "";
+    }
 });
 
 // ==========================================
@@ -146,10 +156,8 @@ window.addEventListener("keydown", (e) => {
 function triggerPenMeltdown() {
     AudioEngine.playMeltdown();
     console.warn("⚠️ SYSTEM EVENT: STATIONERY THEFT FAULT REGISTERED.");
-    
     document.body.style.transition = "0.3s";
     document.body.style.backgroundColor = "#660000"; 
-    
     setTimeout(() => {
         alert("SYSTEM ERROR: Carl is screaming about a stolen pen again! (Phase 3 Loaded)");
         document.body.style.backgroundColor = "#050505"; 
@@ -161,25 +169,20 @@ function triggerCrash() {
     console.error("FATAL CRASH: Layout gravity.js engine fault.");
     
     const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn, .terminal-input-container');
-    
     units.forEach((el) => {
         const randomX = Math.floor(Math.random() * 400) - 200; 
         const randomSpin = Math.floor(Math.random() * 120) - 60; 
-        
         el.style.transition = "transform 2s cubic-bezier(0.47, 0, 0.745, 0.715), opacity 1.5s";
         el.style.transform = `translate(${randomX}px, 1200px) rotate(${randomSpin}deg)`; 
         el.style.opacity = "0";
     });
 
-    setTimeout(() => {
-        location.reload();
-    }, 4000);
+    setTimeout(() => { location.reload(); }, 4000);
 }
 
 function triggerIponanSuccess() {
     AudioEngine.playSuccess();
-    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active at Iponan Elementary.");
-    
+    console.log("🏆 DIRECTIVE VALIDATED: Grade 5 Status Active.");
     document.documentElement.style.setProperty('--accent', '#ffd700');
     
     const profile = document.querySelector('.operator-profile');
@@ -202,6 +205,11 @@ function triggerIponanSuccess() {
     }, 5000);
 }
 
+function triggerClaudeSignature() {
+    AudioEngine.playSuccess();
+    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGGESTED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
+}
+
 // ==========================================
 // MOBILE TERMINAL USER INTERFACE INPUT
 // ==========================================
@@ -209,9 +217,7 @@ const mobileInput = document.getElementById('terminal-input');
 
 if (mobileInput) {
     mobileInput.addEventListener('input', (e) => {
-        // Play click audio tracking each keypad strike
         AudioEngine.playClick();
-        
         const text = e.target.value.toLowerCase().trim();
         
         if (text === 'pen') {
@@ -226,7 +232,41 @@ if (mobileInput) {
             triggerIponanSuccess();
             e.target.value = '';
         }
+        else if (text === 'claude') {
+            triggerClaudeSignature();
+            e.target.value = '';
+        }
     });
+}
+
+// ==========================================
+// CLAUDE'S BONUS KONAMI PROTOCOL
+// ==========================================
+const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+let konamiIndex = 0;
+
+window.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+            triggerKonamiDossier();
+            konamiIndex = 0;
+        }
+    } else {
+        konamiIndex = 0;
+    }
+});
+
+function triggerKonamiDossier() {
+    AudioEngine.playAlert();
+    document.body.style.backgroundColor = "#330000";
+    setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 200);
+    document.getElementById('dossier-modal').style.display = 'flex';
+}
+
+function closeDossier() {
+    AudioEngine.playClick();
+    document.getElementById('dossier-modal').style.display = 'none';
 }
 
 // ==========================================
@@ -293,32 +333,5 @@ LOG EXPORT COMPLETE // RECORD LOCKED BY OPERATOR VOIDRUN
 window.onload = () => {
     console.log("%c [SYSTEM ONLINE] ", "color: #39ff14; font-weight: bold; background: #000; padding: 2px; border: 1px solid #39ff14;");
     console.log("Identity Confirmed: VoidRun.");
-    console.log("Awaiting commands via keys or terminal: 'pen' | 'crash' | 'iponan'");
+    console.log("Awaiting commands: 'pen' | 'crash' | 'iponan' | 'claude' | (Konami Code on keys)");
 };
-// CLAUDE'S KONAMI PROTOCOL
-const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
-let konamiIndex = 0;
-
-window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-            triggerKonamiDossier();
-            konamiIndex = 0;
-        }
-    } else {
-        konamiIndex = 0;
-    }
-});
-
-function triggerKonamiDossier() {
-    AudioEngine.playAlert();
-    document.body.style.backgroundColor = "#330000";
-    setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 200);
-    document.getElementById('dossier-modal').style.display = 'flex';
-}
-
-function closeDossier() {
-    AudioEngine.playClick();
-    document.getElementById('dossier-modal').style.display = 'none';
-}
