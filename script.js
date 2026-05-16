@@ -7,29 +7,6 @@
 const AudioEngine = {
     ctx: null,
 
-    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
-    playJingle() {
-        this.init();
-        const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
-        
-        notes.forEach((freq, index) => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            
-            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
-            osc.frequency.setValueAtTime(freq, now + (index * 0.12));
-            
-            gain.gain.setValueAtTime(0.06, now + (index * 0.12));
-            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.12) + 0.2);
-            
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            
-            osc.start(now + (index * 0.12));
-            osc.stop(now + (index * 0.12) + 0.2);
-        });
-    }
     init() {
         if (!this.ctx) {
             this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -138,6 +115,30 @@ const AudioEngine = {
         
         osc.start();
         osc.stop(this.ctx.currentTime + 0.5);
+    },
+
+    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
+    playJingle() {
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
+        
+        notes.forEach((freq, index) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
+            osc.frequency.setValueAtTime(freq, now + (index * 0.12));
+            
+            gain.gain.setValueAtTime(0.06, now + (index * 0.12));
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.12) + 0.2);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.start(now + (index * 0.12));
+            osc.stop(now + (index * 0.12) + 0.2);
+        });
     }
 };
 
@@ -148,10 +149,6 @@ let inputBuffer = "";
 
 window.addEventListener("keydown", (e) => {
     AudioEngine.playClick();
-    else if (inputBuffer.includes("voidrun")) {
-        triggerVoidRunDashboard();
-        inputBuffer = "";
-    }
     
     inputBuffer += e.key.toLowerCase();
     if (inputBuffer.length > 15) {
@@ -172,6 +169,10 @@ window.addEventListener("keydown", (e) => {
     }
     else if (inputBuffer.includes("claude")) {
         triggerClaudeSignature();
+        inputBuffer = "";
+    }
+    else if (inputBuffer.includes("voidrun")) {
+        triggerVoidRunDashboard();
         inputBuffer = "";
     }
 });
@@ -234,7 +235,7 @@ function triggerIponanSuccess() {
 
 function triggerClaudeSignature() {
     AudioEngine.playSuccess();
-    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGGESTED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
+    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGROPED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
 }
 
 function triggerVoidRunDashboard() {
@@ -244,10 +245,10 @@ function triggerVoidRunDashboard() {
         "====================================\n" +
         "   VOIDRUN SYSTEMS DIAGNOSTIC LOG   \n" +
         "====================================\n" +
-        "• CORE CORE: Active (Grade 5 Protocol)\n" +
+        "• CORE STATUS: Active (Grade 5 Protocol)\n" +
         "• DEPLOYMENT: GitHub Pages Production\n" +
         "• AUDIO ENGINE: Web Audio API (Chiptune Synthesizer)\n" +
-        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun'\n" +
+        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami'\n" +
         "• SECRET LAYERS: 10-Key Konami Code Active\n" +
         "• COLLABORATION NODE: Claude // Anthropic\n" +
         "• SAGA STATUS: Locked & Unredacted.\n" +
@@ -256,6 +257,7 @@ function triggerVoidRunDashboard() {
     alert(statusReport);
     console.log("%c" + statusReport, "color: #39ff14; font-family: monospace;");
 }
+
 // ==========================================
 // MOBILE TERMINAL USER INTERFACE INPUT
 // ==========================================
@@ -282,11 +284,19 @@ if (mobileInput) {
             triggerClaudeSignature();
             e.target.value = '';
         }
+        else if (text === 'voidrun') {
+            triggerVoidRunDashboard();
+            e.target.value = '';
+        }
+        else if (text === 'konami') { // MOBILE OVERRIDE FOR DOSSIER
+            triggerKonamiDossier();
+            e.target.value = '';
+        }
     });
 }
 
 // ==========================================
-// CLAUDE'S BONUS KONAMI PROTOCOL
+// DESKTOP PHYSICAL CONTROLLER LOGIC (ARROW KEYS)
 // ==========================================
 const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 let konamiIndex = 0;
@@ -327,35 +337,7 @@ CASE DATA: BRO IS NOT TUFF (THE COMPLETE SAGA)
 STATION TIMELINE: MIJS RECORDS -> IPONAN GRADE 5
 ==================================================
 
-Phase 1: The Anthem
-It was Grade 4 at Mary Infant Jesus School (MIJS). The school was small enough that word traveled fast, and my new track, "Bro is Not Tuff," was traveling faster than a wildfire. The song called out the fake personas and the bullies—specifically aiming at Carl, who spent his days hurting others and acting untouchable.
-
-Phase 2: The Physical Confrontation
-Carl couldn't handle the truth of the lyrics. He cornered me in the hallway, his face red with a mix of panic and ego. He didn’t use words; he lunged. His hands clamped around my throat, pinning me against the wall.
-"Take it down!" he hissed, trying to squeeze the air out of me. "Delete it now!"
-He thought that by choking me, he could choke out the song. But even with my back against the wall, I knew one thing: The song stays up.
-
-Phase 3: The Karma of the Pen
-In the days following the attack, Carl spiraled. He kept trying to play the victim, telling everyone he "did nothing wrong." But his true colors kept showing. He stayed aggressive, hurting other kids, and then—in the most pathetic moment of the year—he had a total meltdown over a stolen pen.
-The "tough guy" was literally screaming and complaining about stationary. It was the moment everyone realized the song was 100% right.
-
-Phase 4: The Storming of the Office
-I’d had enough of his threats. I headed for the Principal’s office, determined to end it. Carl saw me and tried to intercept, ready to fight back to keep me from reporting him. He thought he could intimidate me one last time.
-But then he looked behind me. I wasn't alone. I had my teammates—a solid crew of friends who stood as a wall between me and him. Carl froze. He realized he couldn't fight a whole group, and he couldn't lie his way out of a room full of witnesses.
-I looked at his panicked face, and I didn't get mad. I just laughed. The laugh was the final blow to his ego.
-
-Phase 5: Part 2 — The Sequel Drops
-While Carl was busy trying to save face and whining about his pen, I wasn't just sitting around. I went back to the lab and made "Bro is Not Tuff: Part 2."
-If the first song made him mad, Part 2 was his funeral. It detailed the hallway attack, his fake "victim" act, and the hilarious pen incident. I didn't just report him to the Principal; I immortalized his failure in the music.
-
-Phase 6: The Promise of the "Exposed" Video
-I told the Principal everything, and Carl finally had to face the music—literally and figuratively. But I wasn't finished. As I walked past him one last time, I told him the words that would haunt him for the rest of elementary school:
-"I am never taking these down. And just wait... because I’m making an exposed video in the future. Everyone is going to see exactly who you are."
-Carl stood there, realized he’d lost his power, his reputation, and his "toughness" all in one go. He wanted to be a villain, but thanks to the song and the crew, he just became a memory of what happens when karma finally hits.
-
-==================================================
-LOG EXPORT COMPLETE // RECORD LOCKED BY OPERATOR VOIDRUN
-==================================================`;
+[Content Locked Archive Log Complete]`;
 
     const dataBlob = new Blob([logContent], { type: 'text/plain' });
     const pointerUrl = URL.createObjectURL(dataBlob);
@@ -369,8 +351,6 @@ LOG EXPORT COMPLETE // RECORD LOCKED BY OPERATOR VOIDRUN
     
     document.body.removeChild(silentLink);
     URL.revokeObjectURL(pointerUrl);
-    
-    console.log("💾 Log package compiled and saved locally as 'bro is not tuff.txt'.");
 });
 
 // ==========================================
@@ -379,5 +359,4 @@ LOG EXPORT COMPLETE // RECORD LOCKED BY OPERATOR VOIDRUN
 window.onload = () => {
     console.log("%c [SYSTEM ONLINE] ", "color: #39ff14; font-weight: bold; background: #000; padding: 2px; border: 1px solid #39ff14;");
     console.log("Identity Confirmed: VoidRun.");
-    console.log("Awaiting commands: 'pen' | 'crash' | 'iponan' | 'claude' | (Konami Code on keys)");
 };
