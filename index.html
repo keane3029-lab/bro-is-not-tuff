@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOIDRUN | The Carl Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #050505;
+            --text: #e0e0e0;
+            --accent: #39ff14; /* Matrix Green */
+            --warning: #ff3e3e; /* Alert Red */
+            --gray: #1a1a1a;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Fira Code', monospace;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: #000;
+            border-bottom: 2px solid var(--accent);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { 
+            font-family: 'Oswald', sans-serif; 
+            color: var(--accent); 
+            font-size: 1.5rem; 
+            letter-spacing: 2px; 
+        }
+
+        /* Moving Warning Banner */
+        .warning-banner {
+            background: var(--warning);
+            color: #000;
+            font-weight: bold;
+            padding: 5px 0;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #000;
+            text-transform: uppercase;
+        }
+
+        /* Operator Profile (About Me) */
+        .operator-profile {
+            max-width: 800px;
+            margin: 30px auto 10px auto;
+            padding: 20px;
+            background: #0a0a0a;
+            border: 1px solid var(--accent);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+        }
+
+        .profile-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .avatar-box {
+            width: 100px;
+            height: 100px;
+            background: var(--gray);
+            border: 2px solid var(--accent);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+            flex-shrink: 0;
+        }
+
+        .operator-details h2 {
+            margin: 0 0 10px 0;
+            color: var(--accent);
+            font-size: 1.4rem;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .stats-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .stats-list li {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #151515;
+            padding-bottom: 2px;
+        }
+
+        .bio {
+            font-size: 0.9rem;
+            color: #aaa;
+            border-left: 2px solid var(--gray);
+            padding-left: 10px;
+            margin: 0;
+        }
+
+        /* Pulse Status Light */
+        .status-pulse {
+            font-size: 0.75rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .pulse-dot {
+            height: 8px;
+            width: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-animation 2s infinite;
+        }
+
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0px rgba(57, 255, 20, 0.7); }
+            100% { box-shadow: 0 0 0 10px rgba(57, 255, 20, 0); }
+        }
+
+        /* Main Records Content */
+        main {
+            max-width: 840px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .case-file {
+            border: 1px solid var(--gray);
+            background: #0a0a0a;
+            padding: 40px;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .file-header {
+            border-bottom: 2px dashed var(--gray);
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+        }
+
+        .confidential {
+            background: var(--warning);
+            color: #000;
+            padding: 2px 10px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.5rem;
+            margin: 15px 0 5px 0;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* Download Utility Button */
+        #download-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 10px 20px;
+            font-family: 'Fira Code', monospace;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        #download-btn:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        /* Timeline Saga Layout */
+        .phase {
+            margin-bottom: 40px;
+            padding-left: 20px;
+            border-left: 3px solid var(--gray);
+            transition: 0.3s;
+        }
+
+        .phase:hover {
+            border-left: 3px solid var(--accent);
+            background: rgba(57, 255, 20, 0.03);
+        }
+
+        .phase h3 {
+            color: var(--accent);
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .phase p { margin: 0; font-size: 0.95rem; }
+
+        .highlight {
+            border: 1px solid var(--warning);
+            padding: 20px;
+            background: rgba(255, 62, 62, 0.04);
+            border-left: 3px solid var(--warning);
+        }
+
+        .highlight:hover {
+            border-left: 3px solid var(--warning);
+            background: rgba(255, 62, 62, 0.08);
+        }
+
+        strong { color: #fff; }
+        em { color: var(--warning); font-style: normal; font-weight: bold; }
+
+        /* Responsive Fixes */
+        @media (max-width: 650px) {
+            h1 { font-size: 1.8rem; }
+            .case-file { padding: 20px; }
+            .profile-container { flex-direction: column; text-align: center; }
+            .bio { border-left: none; padding-left: 0; }
+            .status-pulse { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">VOIDRUN_SYSTEMS</div>
+    </nav>
+
+    <div class="warning-banner">
+        <marquee scrollamount="10">STATUS: UNRESTRICTED ACCESS // DECRYPTED LOG // MIJS INCIDENT REPORT // NEW DIRECTIVE EN ROUTE</marquee>
+    </div>
+
+    <section class="operator-profile">
+        <div class="profile-container">
+            <div class="avatar-box">VR</div>
+            <div class="operator-details">
+                <h2>OPERATOR: VOIDRUN</h2>
+                <ul class="stats-list">
+                    <li><strong>CLASS:</strong> Creative Developer</li>
+                    <li><strong>SPECIALIZATION:</strong> 3D Simulations & Physics Realism</li>
+                    <li><strong>CURRENT_LOC:</strong> Iponan Elementary School (Grade 5)</li>
+                    <li><strong>PREVIOUS_RECORDS:</strong> MIJS Archive (The Carl Saga)</li>
+                </ul>
+                <p class="bio">
+                    I build interactive code systems from scratch. Whether managing custom simulation engines or dropping a track that exposes fake personas, I stand by my truth. I don't pull scripts down and I don't back down.
+                </p>
+                <div class="status-pulse">
+                    <span class="pulse-dot"></span> SYSTEM_ACTIVE: Grade 5 Protocols Deploying...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section id="saga" class="case-file">
+            <div class="file-header">
+                <span class="confidential">DECRYPTED HISTORICAL DATA</span>
+                <h1>THE COMPLETE SAGA: "BRO IS NOT TUFF"</h1>
+                <p><strong>SUBJECT:</strong> CARL | <strong>INTEL LEVEL:</strong> GRADE 4 RECORD</p>
+                
+                <button id="download-btn">> DOWNLOAD_OFFLINE_LOG</button>
+            </div>
+
+            <div class="phase">
+                <h3>PHASE 1: THE ANTHEM</h3>
+                <p>It was Grade 4 at Mary Infant Jesus School (MIJS). My new track, <strong>"Bro is Not Tuff,"</strong> was traveling faster than a wildfire. It called out the fake personas and the bullies—specifically aiming at Carl.</p>
+            </div>
+
+            <div class="phase">
+                <h3>PHASE 2: THE PHYSICAL CONFRONTATION</h3>
+                <p>Carl cornered me in the hallway. Red-faced and panicked, he lunged. His hands clamped around my throat. <em>"Take it down!"</em> he hissed. He tried to choke the song out of me. He failed. <strong>The song stays up.</strong></p>
+            </div>
+
+            <div class="phase highlight">
+                <h3>PHASE 3: THE KARMA OF THE PEN (CRITICAL ERROR)</h3>
+                <p>Carl spiraled. He tried to play the victim, but his true colors showed when he had a total meltdown... over a <strong>stolen pen.</strong> The "tough guy" was screaming over stationery. The song was 100% right.</p>
+            </div>
+
+            <div class="phase">
+                <h3>PHASE 4: THE STORMING OF THE OFFICE</h3>
+                <p>I headed to the Principal's office. Carl tried to intercept me, ready to intimidate. But then he looked behind me. I had my teammates—a wall of friends. Carl froze. I didn't get mad. I just laughed. That laugh was the final blow.</p>
+            </div>
+
+            <div class="phase">
+                <h3>PHASE 5: PART 2 — THE SEQUEL DROPS</h3>
+                <p>I went back to the lab and made <strong>"Bro is Not Tuff: Part 2."</strong> It detailed the hallway attack, his fake victim act, and the hilarious pen incident. I immortalized his failure in the music.</p>
+            </div>
+
+            <div class="phase">
+                <h3>PHASE 6: THE FINAL PROMISE</h3>
+                <p>As I walked past him one last time: <em>"I am never taking these down. Just wait... because I’m making an exposed video in the future."</em> Carl lost his power, his reputation, and his "toughness" all in one go.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
