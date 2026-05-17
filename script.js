@@ -196,11 +196,69 @@ function printToTerminal(text, type = "log-system") {
 
     const line = document.createElement('div');
     line.className = `log-line ${type}`;
-    line.innerText = `>> ${text}`;
+    line.innerText = text.startsWith(">>") ? text : `>> ${text}`;
     logBox.appendChild(line);
 
-    // Dynamic auto-scrolling execution
     logBox.scrollTop = logBox.scrollHeight;
+}
+
+// ==========================================
+// AUTOMATED LINE-BY-LINE BOOT MATRIX
+// ==========================================
+const bootLines = [
+    { text: "VOIDRUN_SYSTEMS v5.2 // INITIALIZING...", type: "log-system" },
+    { text: "LOADING ARCHIVE PROTOCOLS... OK", type: "log-system" },
+    { text: "AUDIO SYNTH ENGINE... OK", type: "log-info" },
+    { text: "KEYWORD MATRIX... 9 CORE PROTOCOLS ACTIVE", type: "log-system" },
+    { text: "KONAMI CONTROL ARRAY... ARMED", type: "log-error" },
+    { text: "AWAITING OPERATOR INPUT...", type: "log-warning" }
+];
+
+let systemReady = false;
+
+function runBootSequence() {
+    const logBox = document.getElementById('terminal-log');
+    if (logBox) logBox.innerHTML = ""; // Clear out default layout markup
+    
+    let currentLineIndex = 0;
+
+    function printNextBootLine() {
+        if (currentLineIndex < bootLines.length) {
+            const currentItem = bootLines[currentLineIndex];
+            let currentStr = "";
+            let charIndex = 0;
+            
+            // Build temporary line element for typewriter animation simulation
+            const line = document.createElement('div');
+            line.className = `log-line ${currentItem.type}`;
+            line.innerText = ">> ";
+            if (logBox) logBox.appendChild(line);
+
+            function typeCharacter() {
+                if (charIndex < currentItem.text.length) {
+                    currentStr += currentItem.text[charIndex];
+                    line.innerText = `>> ${currentStr}`;
+                    charIndex++;
+                    if (logBox) logBox.scrollTop = logBox.scrollHeight;
+                    setTimeout(typeCharacter, 25); // Velocity of single character output
+                } else {
+                    currentLineIndex++;
+                    setTimeout(printNextBootLine, 250); // Pause window before loading subsequent line
+                }
+            }
+            typeCharacter();
+        } else {
+            systemReady = true; // Unlock runtime user interface inputs
+            const mobileInput = document.getElementById('terminal-input');
+            if (mobileInput) {
+                mobileInput.removeAttribute('disabled');
+                mobileInput.placeholder = "Enter protocol code...";
+                mobileInput.focus();
+            }
+        }
+    }
+    
+    setTimeout(printNextBootLine, 400);
 }
 
 // ==========================================
@@ -210,9 +268,9 @@ let commandHistory = [];
 let historyIndex = -1;
 let backgroundBuffer = "";
 
-// Global Keyboard Tracking Network
 window.addEventListener("keydown", (e) => {
-    // Only capture background keystrokes if user isn't holding focus in input bar
+    if (!systemReady) return; // Prevent interference during system boot phase
+
     if (document.activeElement !== document.getElementById('terminal-input')) {
         AudioEngine.playClick();
         backgroundBuffer += e.key.toLowerCase();
@@ -374,24 +432,25 @@ function triggerTuffProtocol() {
 const mobileInput = document.getElementById('terminal-input');
 
 if (mobileInput) {
+    // Force field status to locked until boot sequence processes finish
+    mobileInput.setAttribute('disabled', 'true');
+    mobileInput.placeholder = "System initializing... please wait.";
+
     mobileInput.addEventListener('keydown', (e) => {
-        // Execute command submission upon pressing Enter
+        if (!systemReady) return;
+
         if (e.key === 'Enter') {
             AudioEngine.playClick();
             const text = mobileInput.value.trim();
             
             if (text !== '') {
                 printToTerminal(text, "log-user");
-                
-                // Track into history log buffer
                 commandHistory.push(text);
                 historyIndex = commandHistory.length;
-                
                 evaluateBuffer(text, false);
             }
             mobileInput.value = ''; 
         }
-        // REAL CLI AUTHENTICITY CYCLE: Command recall array up/down arrows
         else if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (commandHistory.length > 0 && historyIndex > 0) {
@@ -419,6 +478,8 @@ const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft',
 let konamiIndex = 0;
 
 window.addEventListener('keydown', (e) => {
+    if (!systemReady) return;
+
     if (e.key.toLowerCase() === konamiCode[konamiIndex]) {
         konamiIndex++;
         if (konamiIndex === konamiCode.length) {
@@ -452,6 +513,7 @@ function closeDossier() {
 const downBtn = document.getElementById('download-btn');
 if (downBtn) {
     downBtn.addEventListener('click', () => {
+        if (!systemReady) return;
         AudioEngine.playClick();
         printToTerminal("Requesting secure server-side file access... downloading log.", "log-system");
         
@@ -463,3 +525,6 @@ if (downBtn) {
         document.body.removeChild(silentLink);
     });
 }
+
+// Initialize boot parameters when browser completes frame execution
+window.addEventListener("DOMContentLoaded", runBootSequence);
