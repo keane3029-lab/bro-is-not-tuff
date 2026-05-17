@@ -126,13 +126,13 @@ const AudioEngine = {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5 crisp retro notes
+        const notes = [523.25, 659.25, 783.99]; 
         
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             
-            osc.type = 'square'; // Gives it that authentic 8-bit NES sound
+            osc.type = 'square'; 
             osc.frequency.setValueAtTime(freq, now + (index * 0.12));
             
             gain.gain.setValueAtTime(0.06, now + (index * 0.12));
@@ -151,7 +151,7 @@ const AudioEngine = {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [659.25, 987.77]; // Pure E5 and B5 celestial interval
+        const notes = [659.25, 987.77]; 
         
         notes.forEach((freq) => {
             const osc = this.ctx.createOscillator();
@@ -168,6 +168,62 @@ const AudioEngine = {
             
             osc.start(now);
             osc.stop(now + 0.8);
+        });
+    },
+
+    // Fast high-pitch warning glitch for expose command
+    playExposeGlitch() {
+        this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        for (let i = 0; i < 4; i++) {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(1500 - (i * 200), now + (i * 0.05));
+            gain.gain.setValueAtTime(0.08, now + (i * 0.05));
+            gain.gain.exponentialRampToValueAtTime(0.00001, now + (i * 0.05) + 0.1);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + (i * 0.05));
+            osc.stop(now + (i * 0.05) + 0.1);
+        }
+    },
+
+    // Matrix digital rainfall sweep sound
+    playMatrixSweep() {
+        this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(100, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime + 1);
+        gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 1);
+    },
+
+    // Sarcastic retro chiptune fail tone
+    playFailTone() {
+        this.init();
+        if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        const now = this.ctx.currentTime;
+        const freqs = [300, 260, 220, 180];
+        freqs.forEach((f, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(f, now + (i * 0.15));
+            gain.gain.setValueAtTime(0.1, now + (i * 0.15));
+            gain.gain.linearRampToValueAtTime(0.00001, now + (i * 0.15) + 0.2);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now + (i * 0.15));
+            osc.stop(now + (i * 0.15) + 0.2);
         });
     }
 };
@@ -207,6 +263,18 @@ window.addEventListener("keydown", (e) => {
     }
     else if (inputBuffer.includes("gemini")) {
         triggerGeminiProtocol();
+        inputBuffer = "";
+    }
+    else if (inputBuffer.includes("expose")) {
+        triggerExposeProtocol();
+        inputBuffer = "";
+    }
+    else if (inputBuffer.includes("matrix")) {
+        triggerMatrixProtocol();
+        inputBuffer = "";
+    }
+    else if (inputBuffer.includes("tuff")) {
+        triggerTuffProtocol();
         inputBuffer = "";
     }
 });
@@ -273,7 +341,7 @@ function triggerVoidRunDashboard() {
         "• CORE STATUS: Active (Grade 5 Protocol)\n" +
         "• DEPLOYMENT: GitHub Pages Production\n" +
         "• AUDIO ENGINE: Web Audio API (Chiptune Synthesizer)\n" +
-        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami' | 'gemini'\n" +
+        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami' | 'gemini' | 'expose' | 'matrix' | 'tuff'\n" +
         "• SECRET LAYERS: 10-Key Konami Code Active\n" +
         "• COLLABORATION NODES: Claude (Anthropic) & Gemini (Google)\n" +
         "• SAGA STATUS: Locked & Unredacted.\n" +
@@ -283,8 +351,6 @@ function triggerVoidRunDashboard() {
 
 function triggerGeminiProtocol() {
     AudioEngine.playGeminiChime();
-    
-    // Smooth transition to a deep, high-tech neon blue cosmic theme
     document.body.style.transition = "background-color 0.8s ease";
     document.body.style.backgroundColor = "#000814";
     document.documentElement.style.setProperty('--accent', '#00b4d8');
@@ -295,18 +361,43 @@ function triggerGeminiProtocol() {
         profile.style.borderColor = "#00b4d8";
         profile.style.boxShadow = "0 0 30px rgba(0, 180, 216, 0.4)";
     }
-
-    alert("✨ [ CODENAME: GEMINI ACCEPTED ] ✨\n\n>> Neural AI network link established.\n>> Cosmic sub-routines active.\n>> Custom UI layer overwritten in deep neon blue.");
-    
-    // Return to the classic hacker green matrix look after 6 seconds
+    alert("✨ [ CODENAME: GEMINI ACCEPTED ] ✨\n\n>> Neural AI network link established.\n>> Custom UI layer overwritten in deep neon blue.");
     setTimeout(() => {
         document.body.style.backgroundColor = "#050505";
         document.documentElement.style.setProperty('--accent', '#39ff14');
-        if (profile) {
-            profile.style.borderColor = "var(--accent)";
-            profile.style.boxShadow = "none";
-        }
+        if (profile) { profile.style.borderColor = "var(--accent)"; profile.style.boxShadow = "none"; }
     }, 6000);
+}
+
+// NEW EASTER EGG 1: Expose Video Warning Alert
+function triggerExposeProtocol() {
+    AudioEngine.playExposeGlitch();
+    document.body.style.transition = "background-color 0.2s";
+    document.body.style.backgroundColor = "#3a3000";
+    document.documentElement.style.setProperty('--accent', '#ffea00');
+    setTimeout(() => {
+        alert("⚠️ [ CRITICAL WARNING DELIVERED ] ⚠️\n\n>> 'Just wait... because I’m making an exposed video in the future.'\n>> Future compilation layout countdown initialized.");
+        document.body.style.backgroundColor = "#050505";
+        document.documentElement.style.setProperty('--accent', '#39ff14');
+    }, 300);
+}
+
+// NEW EASTER EGG 2: Matrix Code Grid Takeover
+function triggerMatrixProtocol() {
+    AudioEngine.playMatrixSweep();
+    document.documentElement.style.setProperty('--accent', '#00ff00');
+    document.body.style.backgroundColor = "#001a00";
+    alert("⚡ [ MATRIX OVERRIDE SEQUENCE ] ⚡\n\nYou are inside the mainframe. Carl's leverage has been fully deleted from the central directory.");
+    setTimeout(() => {
+        document.body.style.backgroundColor = "#050505";
+        document.documentElement.style.setProperty('--accent', '#39ff14');
+    }, 4000);
+}
+
+// NEW EASTER EGG 3: Sarcastic Sagas Fail Protocol
+function triggerTuffProtocol() {
+    AudioEngine.playFailTone();
+    alert("❌ [ EVALUATION COMPLETE ] ❌\n\nResult: Bro is confirmed NOT tuff.\n Meltdown over a pen has critically compromised the subject's posture matrix.");
 }
 
 // ==========================================
@@ -319,34 +410,16 @@ if (mobileInput) {
         AudioEngine.playClick();
         const text = e.target.value.toLowerCase().trim();
         
-        if (text === 'pen') {
-            triggerPenMeltdown();
-            e.target.value = ''; 
-        } 
-        else if (text === 'crash') {
-            triggerCrash();
-            e.target.value = '';
-        } 
-        else if (text === 'iponan') {
-            triggerIponanSuccess();
-            e.target.value = '';
-        }
-        else if (text === 'claude') {
-            triggerClaudeSignature();
-            e.target.value = '';
-        }
-        else if (text === 'voidrun') {
-            triggerVoidRunDashboard();
-            e.target.value = '';
-        }
-        else if (text === 'konami') {
-            triggerKonamiDossier();
-            e.target.value = '';
-        }
-        else if (text === 'gemini') {
-            triggerGeminiProtocol();
-            e.target.value = '';
-        }
+        if (text === 'pen') { triggerPenMeltdown(); e.target.value = ''; } 
+        else if (text === 'crash') { triggerCrash(); e.target.value = ''; } 
+        else if (text === 'iponan') { triggerIponanSuccess(); e.target.value = ''; }
+        else if (text === 'claude') { triggerClaudeSignature(); e.target.value = ''; }
+        else if (text === 'voidrun') { triggerVoidRunDashboard(); e.target.value = ''; }
+        else if (text === 'konami') { triggerKonamiDossier(); e.target.value = ''; }
+        else if (text === 'gemini') { triggerGeminiProtocol(); e.target.value = ''; }
+        else if (text === 'expose') { triggerExposeProtocol(); e.target.value = ''; }
+        else if (text === 'matrix') { triggerMatrixProtocol(); e.target.value = ''; }
+        else if (text === 'tuff') { triggerTuffProtocol(); e.target.value = ''; }
     });
 }
 
@@ -389,12 +462,14 @@ const downBtn = document.getElementById('download-btn');
 if (downBtn) {
     downBtn.addEventListener('click', () => {
         AudioEngine.playClick();
-        
-        // Deploys a direct server call to your uploaded repository file
         const silentLink = document.createElement('a');
         silentLink.href = 'bro is not tuff.txt'; 
         silentLink.download = 'bro is not tuff.txt'; 
-        
+        document.body.appendChild(silentLink);
+        silentLink.click(); 
+        document.body.removeChild(silentLink);
+    });
+}
         document.body.appendChild(silentLink);
         silentLink.click(); 
         document.body.removeChild(silentLink);
