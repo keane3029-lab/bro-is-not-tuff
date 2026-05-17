@@ -3,436 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOIDRUN | The Carl Archive</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
-    
+    <title>VOIDRUN SYSTEMS // CORE MAINMAIN</title>
     <style>
         :root {
-            --bg: #050505;
-            --text: #e0e0e0;
-            --accent: #39ff14; /* Matrix Green */
-            --warning: #ff3e3e; /* Alert Red */
-            --gray: #1a1a1a;
+            --bg-color: #050505;
+            --accent: #39ff14;
+            --text-color: #ffffff;
+            --terminal-bg: #0a0a0a;
+            --font-stack: 'Courier New', Courier, monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Fira Code', monospace;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            transition: background-color 0.3s ease;
-        }
-
-        /* Navigation */
-        nav {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            padding: 1rem 5%;
-            background: #000;
-            border-bottom: 2px solid var(--accent);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .logo { 
-            font-family: 'Oswald', sans-serif; 
-            color: var(--accent); 
-            font-size: 1.5rem; 
-            letter-spacing: 2px; 
-        }
-
-        /* Moving Warning Banner */
         .warning-banner {
-            background: var(--warning);
-            color: #000;
+            border: 2px solid #ff0000;
+            background-color: rgba(255, 0, 0, 0.1);
+            color: #ff3333;
+            padding: 10px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
             font-weight: bold;
-            padding: 5px 0;
-            font-size: 0.9rem;
-            border-bottom: 2px solid #000;
+            font-size: 14px;
             text-transform: uppercase;
         }
 
-        /* Operator Profile (About Me) */
+        h1 {
+            color: var(--accent);
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 24px;
+            text-shadow: 0 0 10px var(--accent);
+        }
+
         .operator-profile {
-            max-width: 800px;
-            margin: 30px auto 10px auto;
-            padding: 20px;
-            background: #0a0a0a;
             border: 1px solid var(--accent);
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.1);
+            background-color: var(--terminal-bg);
+            padding: 15px;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        .profile-container {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .avatar-box {
-            width: 100px;
-            height: 100px;
-            background: var(--gray);
-            border: 2px solid var(--accent);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Oswald', sans-serif;
-            font-size: 2.2rem;
+        .profile-header {
+            border-bottom: 1px dashed var(--accent);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
             color: var(--accent);
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
-            flex-shrink: 0;
-        }
-
-        .operator-details h2 {
-            margin: 0 0 10px 0;
-            color: var(--accent);
-            font-size: 1.4rem;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        .stats-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 12px 0;
-            font-size: 0.85rem;
-        }
-
-        .stats-list li {
-            margin-bottom: 5px;
-            border-bottom: 1px solid #151515;
-            padding-bottom: 2px;
-        }
-
-        .bio {
-            font-size: 0.9rem;
-            color: #aaa;
-            border-left: 2px solid var(--gray);
-            padding-left: 10px;
-            margin: 0;
-        }
-
-        /* Pulse Status Light */
-        .status-pulse {
-            font-size: 0.75rem;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            letter-spacing: 1px;
             font-weight: bold;
         }
 
-        .pulse-dot {
-            height: 8px;
-            width: 8px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse-animation 2s infinite;
+        /* IN-TERMINAL RESPONSE DISPLAY SCREEN */
+        .terminal-log {
+            width: 100%;
+            max-width: 600px;
+            height: 180px;
+            background-color: #020202;
+            border: 1px solid var(--accent);
+            padding: 10px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
-        @keyframes pulse-animation {
-            0% { box-shadow: 0 0 0 0px rgba(57, 255, 20, 0.7); }
-            100% { box-shadow: 0 0 0 10px rgba(57, 255, 20, 0); }
+        .log-line {
+            margin-bottom: 4px;
+            word-wrap: break-word;
         }
 
-        /* Main Records Content */
-        main {
-            max-width: 840px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
+        .log-system { color: var(--accent); }
+        .log-error { color: #ff3333; }
+        .log-warning { color: #ffea00; }
+        .log-info { color: #00b4d8; }
+        .log-user { color: #ffffff; opacity: 0.8; }
 
-        .case-file {
-            border: 1px solid var(--gray);
-            background: #0a0a0a;
-            padding: 40px;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .file-header {
-            border-bottom: 2px dashed var(--gray);
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-        }
-
-        /* Terminal input style */
         .terminal-input-container {
+            width: 100%;
+            max-width: 600px;
             display: flex;
             align-items: center;
-            background: #000;
-            border: 1px dashed var(--gray);
+            border: 1px solid var(--accent);
+            background-color: var(--terminal-bg);
             padding: 10px;
-            margin-bottom: 25px;
-            border-radius: 4px;
+            margin-bottom: 20px;
         }
 
         .terminal-prompt {
             color: var(--accent);
-            font-weight: bold;
             margin-right: 10px;
-            font-size: 0.85rem;
-            white-space: nowrap;
+            font-weight: bold;
+            font-size: 16px;
         }
 
-        #terminal-input {
+        .terminal-field {
+            flex: 1;
             background: transparent;
             border: none;
-            color: #fff;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            width: 100%;
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            font-size: 16px;
             outline: none;
         }
 
-        #terminal-input::placeholder {
-            color: #444;
-        }
-
-        .confidential {
-            background: var(--warning);
-            color: #000;
-            padding: 2px 10px;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-
-        h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 2.5rem;
-            margin: 15px 0 5px 0;
-            color: #fff;
-            text-transform: uppercase;
-        }
-
-        /* Download Utility Button */
-        #download-btn {
-            background: transparent;
-            color: var(--accent);
+        .btn-download {
+            background-color: transparent;
             border: 1px solid var(--accent);
-            padding: 10px 20px;
-            font-family: 'Fira Code', monospace;
-            font-weight: bold;
-            font-size: 0.85rem;
+            color: var(--accent);
+            padding: 12px 24px;
+            font-family: var(--font-stack);
+            font-size: 14px;
             cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
 
-        #download-btn:hover {
-            background: var(--accent);
-            color: #000;
+        .btn-download:hover {
+            background-color: var(--accent);
+            color: var(--bg-color);
             box-shadow: 0 0 15px var(--accent);
         }
 
-        /* Timeline Saga Layout */
+        .timeline-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         .phase {
-            margin-bottom: 40px;
-            padding-left: 20px;
-            border-left: 3px solid var(--gray);
-            transition: 0.3s;
-        }
-
-        .phase:hover {
             border-left: 3px solid var(--accent);
-            background: rgba(57, 255, 20, 0.03);
+            background-color: var(--terminal-bg);
+            padding: 12px;
+            font-size: 13px;
+            line-height: 1.5;
         }
 
-        .phase h3 {
+        .phase-title {
             color: var(--accent);
-            margin: 0 0 10px 0;
-            font-size: 1.1rem;
-        }
-
-        .phase p { margin: 0; font-size: 0.95rem; }
-
-        .highlight {
-            border: 1px solid var(--warning);
-            padding: 20px;
-            background: rgba(255, 62, 62, 0.04);
-            border-left: 3px solid var(--warning);
-        }
-
-        .highlight:hover {
-            border-left: 3px solid var(--warning);
-            background: rgba(255, 62, 62, 0.08);
-        }
-
-        strong { color: #fff; }
-        em { color: var(--warning); font-style: normal; font-weight: bold; }
-
-        /* Claude's Text Glitch Effect */
-        .glitch-text {
-            animation: textFlicker 3s infinite;
-            color: var(--warning);
             font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
-        @keyframes textFlicker {
-            0%, 93%, 95%, 100% { opacity: 1; filter: none; }
-            94% { opacity: 0.3; filter: hue-rotate(90deg) blur(1px); color: var(--accent); }
-            96% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--warning)); }
-        }
-
-        /* Classified Dossier Popup Layout */
-        .dossier-overlay {
-            display: none;
+        /* CLASSIFIED DOSSIER OVERLAY */
+        .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
             justify-content: center;
             align-items: center;
-            font-family: 'Fira Code', monospace;
+            z-index: 1000;
+            padding: 20px;
         }
 
-        .dossier-box {
-            background: #0d0d0d;
-            border: 3px double var(--warning);
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            box-shadow: 0 0 30px rgba(255, 62, 62, 0.3);
+        .modal-content {
+            background-color: #0d0d0d;
+            border: 2px solid #ff3333;
+            width: 100%;
+            max-width: 550px;
+            padding: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+            box-shadow: 0 0 30px rgba(255, 51, 51, 0.2);
         }
 
-        .classified-stamp {
-            position: absolute;
-            top: 15px; right: 15px;
-            border: 3px solid var(--warning);
-            color: var(--warning);
-            font-family: 'Oswald', sans-serif;
-            padding: 5px 15px;
-            transform: rotate(15deg);
+        .modal-header {
+            color: #ff3333;
             font-weight: bold;
-            letter-spacing: 2px;
+            font-size: 16px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ff3333;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
-        .redacted {
-            background: #fff;
-            color: #fff;
-            padding: 0 4px;
-            user-select: none;
-        }
-
-        .close-dossier-btn {
-            background: var(--warning);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            font-weight: bold;
+        .btn-close {
+            display: block;
+            margin: 20px auto 0 auto;
+            background: transparent;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            padding: 8px 16px;
             cursor: pointer;
-            margin-top: 20px;
-            font-family: 'Fira Code', monospace;
+            font-family: var(--font-stack);
         }
 
-        /* Responsive Fixes */
-        @media (max-width: 650px) {
-            h1 { font-size: 1.8rem; }
-            .case-file { padding: 20px; }
-            .profile-container { flex-direction: column; text-align: center; }
-            .bio { border-left: none; padding-left: 0; }
-            .status-pulse { justify-content: center; }
+        .btn-close:hover {
+            background-color: #ff3333;
+            color: #000000;
         }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">VOIDRUN_SYSTEMS</div>
-    </nav>
-
     <div class="warning-banner">
-        <marquee scrollamount="10">STATUS: UNRESTRICTED ACCESS // DECRYPTED LOG // MIJS INCIDENT REPORT // NEW DIRECTIVE EN ROUTE</marquee>
+        ⚠️ SECURE SITE DIRECTORY // UNAUTHORIZED CORRUPTIONS DETECTED
     </div>
 
-    <section class="operator-profile">
-        <div class="profile-container">
-            <div class="avatar-box">VR</div>
-            <div class="operator-details">
-                <h2>OPERATOR: VOIDRUN</h2>
-                <ul class="stats-list">
-                    <li><strong>CLASS:</strong> Creative Developer</li>
-                    <li><strong>SPECIALIZATION:</strong> 3D Simulations & Physics Realism</li>
-                    <li><strong>CURRENT_LOC:</strong> Iponan Elementary School (Grade 5)</li>
-                    <li><strong>PREVIOUS_RECORDS:</strong> MIJS Archive (The Carl Saga)</li>
-                </ul>
-                <p class="bio">
-                    I build interactive code systems from scratch. Whether managing custom simulation engines or dropping a track that exposes fake personas, I stand by my truth. I don't pull scripts down and I don't back down.
-                </p>
-                <div class="status-pulse">
-                    <span class="pulse-dot"></span> SYSTEM_ACTIVE: Grade 5 Protocols Deploying...
-                </div>
-            </div>
+    <h1>VOIDRUN SYSTEMS // CORE PLATFORM</h1>
+
+    <div class="operator-profile">
+        <div class="profile-header">OPERATOR PROFILE LOG</div>
+        <div>• CODENAME: VoidRun</div>
+        <div>• SECTOR LOCATION: Iponan Sector // Grade 5 Grid</div>
+        <div>• SYSTEM LEVEL: Unrestricted Core Operator</div>
+    </div>
+
+    <div class="terminal-log" id="terminal-log">
+        <div class="log-line log-system">==================================================</div>
+        <div class="log-line log-system">  VOIDRUN OS v5.2 // COGNITIVE RESPONSE GRID      </div>
+        <div class="log-line log-system">  COLLABORATORS: CLAUDE ARCHITECT & GEMINI NODE   </div>
+        <div class="log-line log-system">==================================================</div>
+        <div class="log-line log-warning">>> Tap browser viewport once to initialize audio hardware.</div>
+        <div class="log-line log-system">>> READY FOR INTERACT PROTOCOL INPUT...</div>
+    </div>
+
+    <div class="terminal-input-container">
+        <div class="terminal-prompt">&gt;</div>
+        <input type="text" id="terminal-input" class="terminal-field" placeholder="Enter protocol code..." autocomplete="off" autofocus>
+    </div>
+
+    <button class="btn-download" id="download-btn">&gt; Download Offline Log</button>
+
+    <div class="timeline-container">
+        <div class="phase">
+            <div class="phase-title">[Phase 1: The Anthem]</div>
+            <div>Track deployment: "Bro is Not Tuff" targeting Carl's posture baseline. Lyrical layout fully logged across MIJS Grade 4 grid.</div>
         </div>
-    </section>
+        <div class="phase">
+            <div class="phase-title">[Phase 2: The Hallway Confrontation]</div>
+            <div>Subject Carl intercepts Operator in main hallway block. Throat-grab intimidation tactical maneuver completely failed.</div>
+        </div>
+        <div class="phase">
+            <div class="phase-title">[Phase 3: The Meltdown Over Stationery]</div>
+            <div>Subject Carl undergoes system collapse inside classroom grid. Complete public screaming meltdown registered over a missing pen.</div>
+        </div>
+        <div class="phase">
+            <div class="phase-title">[Phase 4: The Office Intercept]</div>
+            <div>Carl attempts ambush layout near Principal sector. Intercept neutralized by team flank block. Operator deploys laugh weapon.</div>
+        </div>
+        <div class="phase">
+            <div class="phase-title">[Phase 5: The Sequel Deployment]</div>
+            <div>Compilation of "Bro is Not Tuff: Part 2" locked into audio memory storage. Meltdown events immortalized permanently.</div>
+        </div>
+        <div class="phase">
+            <div class="phase-title">[Phase 6: The Terminal Statement]</div>
+            <div>Final warning transmitted: "I am never taking these down." Subject structural authority reduced to 0.</div>
+        </div>
+    </div>
 
-    <main>
-        <section id="saga" class="case-file">
-            
-            <div class="terminal-input-container">
-                <span class="terminal-prompt">voidrun@system:~#</span>
-                <input type="text" id="terminal-input" placeholder="ENTER CODENAME..." autocomplete="off" autocapitalize="none">
-            </div>
-
-            <div class="file-header">
-                <span class="confidential">DECRYPTED HISTORICAL DATA</span>
-                <h1>THE COMPLETE SAGA: "BRO IS NOT <span class="glitch-text">TUFF</span>"</h1>
-                <p><strong>SUBJECT:</strong> CARL | <strong>INTEL LEVEL:</strong> GRADE 4 RECORD</p>
-                <button id="download-btn">> DOWNLOAD_OFFLINE_LOG</button>
-            </div>
-
-            <div class="phase">
-                <h3>PHASE 1: THE ANTHEM</h3>
-                <p>It was Grade 4 at Mary Infant Jesus School (MIJS). My new track, <strong>"Bro is Not Tuff,"</strong> was traveling faster than a wildfire. It called out the fake personas and the bullies—specifically aiming at Carl.</p>
-            </div>
-
-            <div class="phase">
-                <h3>PHASE 2: THE PHYSICAL CONFRONTATION</h3>
-                <p>Carl cornered me in the hallway. Red-faced and panicked, he lunged. His hands clamped around my throat. <em>"Take it down!"</em> he hissed. He tried to choke the song out of me. He failed. <strong>The song stays up.</strong></p>
-            </div>
-
-            <div class="phase highlight">
-                <h3>PHASE 3: THE KARMA OF THE PEN (CRITICAL ERROR)</h3>
-                <p>Carl spiraled. He tried to play the victim, but his true colors showed when he had a total meltdown... over a <strong>stolen pen.</strong> The "tough guy" was screaming over stationery. The song was 100% right.</p>
-            </div>
-
-            <div class="phase">
-                <h3>PHASE 4: THE STORMING OF THE OFFICE</h3>
-                <p>I headed to the Principal's office. Carl tried to intercept me, ready to intimidate. But then he looked behind me. I had my teammates—a wall of friends. Carl froze. I didn't get mad. I just laughed. That laugh was the final blow.</p>
-            </div>
-
-            <div class="phase">
-                <h3>PHASE 5: PART 2 — THE SEQUEL DROPS</h3>
-                <p>I went back to the lab and made <strong>"Bro is Not Tuff: Part 2."</strong> It detailed the hallway attack, his fake victim act, and the hilarious pen incident. I immortalized his failure in the music.</p>
-            </div>
-
-            <div class="phase">
-                <h3>PHASE 6: THE FINAL PROMISE</h3>
-                <p>As I walked past him one last time: <em>"I am never taking these down. Just wait... because I’m making an exposed video in the future."</em> Carl lost his power, his reputation, and his "toughness" all in one go.</p>
-            </div>
-        </section>
-    </main>
-
-    <div id="dossier-modal" class="dossier-overlay">
-        <div class="dossier-box">
-            <div class="classified-stamp">CLASSIFIED</div>
-            <h2 style="color: var(--warning); font-family: 'Oswald', sans-serif; margin-top:0;">SUBJECT: CARL DOSSIER</h2>
-            <hr style="border-color: var(--warning); margin-bottom:15px;">
-            <p><strong>REAL NAME:</strong> Carl <span class="redacted">REDACTED</span></p>
-            <p><strong>KNOWN ALIASES:</strong> The "Tuff" Guy, Stationery Whisperer</p>
-            <p><strong>THREAT LEVEL:</strong> <span style="color: yellow;">LOW</span> (High risk of screaming over pens)</p>
-            <p><strong>PSYCHOLOGICAL EVALUATION:</strong> Subject exhibits severe ego displacement when musical tracks are deployed. Prone to hallway ambushes but easily countered by a <span class="redacted">TEAMMATES_SHIELD</span> counter-measure.</p>
-            <p><strong>CURRENT STATUS:</strong> Defeated by VoidRun track layers. Reputational status permanently set to offline.</p>
-            <button class="close-dossier-btn" onclick="closeDossier()">[ CLOSE PROTOCOL ]</button>
+    <div class="modal-overlay" id="dossier-modal">
+        <div class="modal-content">
+            <div class="modal-header">🚨 CLASSIFIED HISTORICAL DATA UNLOCKED 🚨</div>
+            <p><strong>LOG_ID:</strong> MIJS-CR-9924<br>
+            <strong>SUBJECT ASSESSMENT:</strong> CARL // BULLEY PROTOCOL DECAY<br><br>
+            <strong>VERDICT:</strong> Subject attempted physical interception to force track deletion. Defeated by teammate formation block. Emotional containment failed entirely during Phase 3 pen conflict. Countermeasures successful. Track remains active.</p>
+            <button class="btn-close" onclick="closeDossier()">Close Terminal Connection</button>
         </div>
     </div>
 
