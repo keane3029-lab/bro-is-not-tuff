@@ -13,165 +13,126 @@ const AudioEngine = {
         }
     },
 
-    // Crisp terminal mechanical keyclick sound
     playClick() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
         osc.type = 'sine';
         osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
-        
         gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + 0.05);
-        
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
         osc.start();
         osc.stop(this.ctx.currentTime + 0.05);
     },
 
-    // Glitchy, low down-spiral alarm for Carl's pen meltdown
     playMeltdown() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(160, this.ctx.currentTime);
         osc.frequency.linearRampToValueAtTime(40, this.ctx.currentTime + 0.4);
-        
         gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.4);
-        
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
         osc.start();
         osc.stop(this.ctx.currentTime + 0.4);
     },
 
-    // Chaotic digital explosion slide for the system crash
     playCrash() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(450, this.ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(10, this.ctx.currentTime + 0.8);
-        
         gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.8);
-        
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
         osc.start();
         osc.stop(this.ctx.currentTime + 0.8);
     },
 
-    // Retro golden achievement unlock chord for Iponan success
     playSuccess() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [261.63, 329.63, 392.00, 523.25]; // C Major Arpeggio
-        
+        const notes = [261.63, 329.63, 392.00, 523.25];
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now + (index * 0.08));
-            
             gain.gain.setValueAtTime(0.08, now + (index * 0.08));
             gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.08) + 0.6);
-            
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-            
             osc.start(now + (index * 0.08));
             osc.stop(now + (index * 0.08) + 0.6);
         });
     },
 
-    // Claude's heavy alert siren for Classified data
     playAlert() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(800, this.ctx.currentTime);
         osc.frequency.linearRampToValueAtTime(300, this.ctx.currentTime + 0.5);
-        
         gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.00001, this.ctx.currentTime + 0.5);
-        
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
         osc.start();
         osc.stop(this.ctx.currentTime + 0.5);
     },
 
-    // Claude's upbeat 3-note chiptune jingle for the system diagnostic
     playJingle() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [523.25, 659.25, 783.99]; 
-        
+        const notes = [523.25, 659.25, 783.99];
         notes.forEach((freq, index) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            
-            osc.type = 'square'; 
+            osc.type = 'square';
             osc.frequency.setValueAtTime(freq, now + (index * 0.12));
-            
             gain.gain.setValueAtTime(0.06, now + (index * 0.12));
             gain.gain.exponentialRampToValueAtTime(0.00001, now + (index * 0.12) + 0.2);
-            
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-            
             osc.start(now + (index * 0.12));
             osc.stop(now + (index * 0.12) + 0.2);
         });
     },
 
-    // Gemini's futuristic, glassy twin-tone cosmic chime
     playGeminiChime() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
         const now = this.ctx.currentTime;
-        const notes = [659.25, 987.77]; 
-        
+        const notes = [659.25, 987.77];
         notes.forEach((freq) => {
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
-            
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now);
-            
             gain.gain.setValueAtTime(0.05, now);
             gain.gain.exponentialRampToValueAtTime(0.00001, now + 0.8);
-            
             osc.connect(gain);
             gain.connect(this.ctx.destination);
-            
             osc.start(now);
             osc.stop(now + 0.8);
         });
     },
 
-    // Fast high-pitch warning glitch for expose command
     playExposeGlitch() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -190,7 +151,6 @@ const AudioEngine = {
         }
     },
 
-    // Matrix digital rainfall sweep sound
     playMatrixSweep() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -207,7 +167,6 @@ const AudioEngine = {
         osc.stop(this.ctx.currentTime + 1);
     },
 
-    // Sarcastic retro chiptune fail tone
     playFailTone() {
         this.init();
         if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
@@ -369,7 +328,6 @@ function triggerGeminiProtocol() {
     }, 6000);
 }
 
-// NEW EASTER EGG 1: Expose Video Warning Alert
 function triggerExposeProtocol() {
     AudioEngine.playExposeGlitch();
     document.body.style.transition = "background-color 0.2s";
@@ -382,7 +340,6 @@ function triggerExposeProtocol() {
     }, 300);
 }
 
-// NEW EASTER EGG 2: Matrix Code Grid Takeover
 function triggerMatrixProtocol() {
     AudioEngine.playMatrixSweep();
     document.documentElement.style.setProperty('--accent', '#00ff00');
@@ -394,7 +351,6 @@ function triggerMatrixProtocol() {
     }, 4000);
 }
 
-// NEW EASTER EGG 3: Sarcastic Sagas Fail Protocol
 function triggerTuffProtocol() {
     AudioEngine.playFailTone();
     alert("❌ [ EVALUATION COMPLETE ] ❌\n\nResult: Bro is confirmed NOT tuff.\n Meltdown over a pen has critically compromised the subject's posture matrix.");
@@ -456,7 +412,7 @@ function closeDossier() {
 }
 
 // ==========================================
-// DIRECT LOCAL TEXT ARCHIVE FETCH PIPELINE (.txt)
+// DIRECT LOCAL TEXT ARCHIVE FETCH PIPELINE
 // ==========================================
 const downBtn = document.getElementById('download-btn');
 if (downBtn) {
@@ -465,11 +421,6 @@ if (downBtn) {
         const silentLink = document.createElement('a');
         silentLink.href = 'bro is not tuff.txt'; 
         silentLink.download = 'bro is not tuff.txt'; 
-        document.body.appendChild(silentLink);
-        silentLink.click(); 
-        document.body.removeChild(silentLink);
-    });
-}
         document.body.appendChild(silentLink);
         silentLink.click(); 
         document.body.removeChild(silentLink);
