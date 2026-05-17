@@ -188,73 +188,81 @@ const AudioEngine = {
 };
 
 // ==========================================
-// KEYBOARD CODENAME CAPTURE ENGINE (DESKTOP)
+// CENTRAL OUTPUT STREAM CONTROLLER (IN-UI)
 // ==========================================
-let inputBuffer = "";
+function printToTerminal(text, type = "log-system") {
+    const logBox = document.getElementById('terminal-log');
+    if (!logBox) return;
 
+    const line = document.createElement('div');
+    line.className = `log-line ${type}`;
+    line.innerText = `>> ${text}`;
+    logBox.appendChild(line);
+
+    // Dynamic auto-scrolling execution
+    logBox.scrollTop = logBox.scrollHeight;
+}
+
+// ==========================================
+// KEYBOARD COMMAND REGISTRY & BUFFER ENGINE
+// ==========================================
+let commandHistory = [];
+let historyIndex = -1;
+let backgroundBuffer = "";
+
+// Global Keyboard Tracking Network
 window.addEventListener("keydown", (e) => {
-    AudioEngine.playClick();
-    
-    inputBuffer += e.key.toLowerCase();
-    if (inputBuffer.length > 15) {
-        inputBuffer = inputBuffer.substring(1);
-    }
-
-    if (inputBuffer.includes("pen")) {
-        triggerPenMeltdown();
-        inputBuffer = ""; 
-    }
-    else if (inputBuffer.includes("crash")) {
-        triggerCrash();
-        inputBuffer = ""; 
-    }
-    else if (inputBuffer.includes("iponan")) {
-        triggerIponanSuccess();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("claude")) {
-        triggerClaudeSignature();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("voidrun")) {
-        triggerVoidRunDashboard();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("gemini")) {
-        triggerGeminiProtocol();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("expose")) {
-        triggerExposeProtocol();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("matrix")) {
-        triggerMatrixProtocol();
-        inputBuffer = "";
-    }
-    else if (inputBuffer.includes("tuff")) {
-        triggerTuffProtocol();
-        inputBuffer = "";
+    // Only capture background keystrokes if user isn't holding focus in input bar
+    if (document.activeElement !== document.getElementById('terminal-input')) {
+        AudioEngine.playClick();
+        backgroundBuffer += e.key.toLowerCase();
+        if (backgroundBuffer.length > 15) {
+            backgroundBuffer = backgroundBuffer.substring(1);
+        }
+        evaluateBuffer(backgroundBuffer, true);
     }
 });
 
+function evaluateBuffer(inputStr, isBackground = false) {
+    const cleanInput = inputStr.trim().toLowerCase();
+    if (!cleanInput) return;
+
+    if (cleanInput === "pen") { triggerPenMeltdown(); clearBuffers(isBackground); }
+    else if (cleanInput === "crash") { triggerCrash(); clearBuffers(isBackground); }
+    else if (cleanInput === "iponan") { triggerIponanSuccess(); clearBuffers(isBackground); }
+    else if (cleanInput === "claude") { triggerClaudeSignature(); clearBuffers(isBackground); }
+    else if (cleanInput === "voidrun") { triggerVoidRunDashboard(); clearBuffers(isBackground); }
+    else if (cleanInput === "gemini") { triggerGeminiProtocol(); clearBuffers(isBackground); }
+    else if (cleanInput === "expose") { triggerExposeProtocol(); clearBuffers(isBackground); }
+    else if (cleanInput === "matrix") { triggerMatrixProtocol(); clearBuffers(isBackground); }
+    else if (cleanInput === "tuff") { triggerTuffProtocol(); clearBuffers(isBackground); }
+    else if (cleanInput === "konami") { triggerKonamiDossier(); clearBuffers(isBackground); }
+    else if (!isBackground) {
+        printToTerminal(`UNKNOWN CODENAME: '${cleanInput}'. SYSTEM UNRESPONSIVE.`, "log-error");
+    }
+}
+
+function clearBuffers(isBackground) {
+    if (isBackground) backgroundBuffer = "";
+}
+
 // ==========================================
-// TRIGGER ACTIONS
+// PROTOCOL ANIMATION DISPATCHERS
 // ==========================================
 
 function triggerPenMeltdown() {
     AudioEngine.playMeltdown();
+    printToTerminal("CRITICAL WARNING: CARL STATIONERY CONFLICT PROTOCOL DETECTED.", "log-error");
+    printToTerminal("Phase 3: Subject undergoes systemic public screaming tantrum over pen.", "log-warning");
     document.body.style.transition = "0.3s";
-    document.body.style.backgroundColor = "#660000"; 
-    setTimeout(() => {
-        alert("SYSTEM ERROR: Carl is screaming about a stolen pen again! (Phase 3 Loaded)");
-        document.body.style.backgroundColor = "#050505"; 
-    }, 500);
+    document.body.style.backgroundColor = "#550000"; 
+    setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 600);
 }
 
 function triggerCrash() {
     AudioEngine.playCrash();
-    const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn, .terminal-input-container');
+    printToTerminal("FATAL TERMINAL FAULT GENERATED. SCATTERING CORE INTERFACE NODES...", "log-error");
+    const units = document.querySelectorAll('.phase, .operator-profile, h1, .warning-banner, #download-btn, .terminal-input-container, .terminal-log');
     units.forEach((el) => {
         const randomX = Math.floor(Math.random() * 400) - 200; 
         const randomSpin = Math.floor(Math.random() * 120) - 60; 
@@ -262,20 +270,21 @@ function triggerCrash() {
         el.style.transform = `translate(${randomX}px, 1200px) rotate(${randomSpin}deg)`; 
         el.style.opacity = "0";
     });
-    setTimeout(() => { location.reload(); }, 4000);
+    setTimeout(() => { location.reload(); }, 3500);
 }
 
 function triggerIponanSuccess() {
     AudioEngine.playSuccess();
+    printToTerminal("VALIDATION MET: UPGRADING GRID CONNECTION TO IPONAN GRADE 5.", "log-system");
+    printToTerminal("Operator status set to Gold Class supremacy.", "log-system");
     document.documentElement.style.setProperty('--accent', '#ffd700');
     const profile = document.querySelector('.operator-profile');
     if (profile) {
         profile.style.transition = "0.5s ease";
-        profile.style.transform = "scale(1.04)";
+        profile.style.transform = "scale(1.03)";
         profile.style.borderColor = "#ffd700";
-        profile.style.boxShadow = "0 0 25px rgba(255, 215, 0, 0.35)";
+        profile.style.boxShadow = "0 0 20px rgba(255, 215, 0, 0.3)";
     }
-    alert("WELCOME TO IPONAN GRADE 5: Operator has unlocked Gold Class status.");
     setTimeout(() => {
         document.documentElement.style.setProperty('--accent', '#39ff14');
         if (profile) {
@@ -288,39 +297,37 @@ function triggerIponanSuccess() {
 
 function triggerClaudeSignature() {
     AudioEngine.playSuccess();
-    alert("[ CODENAME ACCEPTED ]\n\n[PROTOCOL SUGGESTED BY: CLAUDE // ANTHROPIC NETWORK]\nStatus: System Architect Footprint Active.");
+    printToTerminal("[ SECURITY CLEARANCE VALIDATED ]", "log-system");
+    printToTerminal("CODENAME: CLAUDE // ANTHROPIC NETWORK footprint verified active.", "log-system");
+    printToTerminal("System Architecture: Stable terminal logs routing correctly.", "log-system");
 }
 
 function triggerVoidRunDashboard() {
     AudioEngine.playJingle();
-    const statusReport = 
-        "====================================\n" +
-        "   VOIDRUN SYSTEMS DIAGNOSTIC LOG   \n" +
-        "====================================\n" +
-        "• CORE STATUS: Active (Grade 5 Protocol)\n" +
-        "• DEPLOYMENT: GitHub Pages Production\n" +
-        "• AUDIO ENGINE: Web Audio API (Chiptune Synthesizer)\n" +
-        "• CODENAMES LOADED: 'pen' | 'crash' | 'iponan' | 'claude' | 'voidrun' | 'konami' | 'gemini' | 'expose' | 'matrix' | 'tuff'\n" +
-        "• SECRET LAYERS: 10-Key Konami Code Active\n" +
-        "• COLLABORATION NODES: Claude (Anthropic) & Gemini (Google)\n" +
-        "• SAGA STATUS: Locked & Unredacted.\n" +
-        "====================================";
-    alert(statusReport);
+    printToTerminal("=== SYSTEM DIAGNOSTIC REGISTER ===", "log-system");
+    printToTerminal("• LOG: Active (Grade 5 Pipeline Override)", "log-system");
+    printToTerminal("• COMPILER: Web Audio Synthesizer Verified", "log-system");
+    printToTerminal("• CODENAMES: 10 Keyword Vectors Configured", "log-system");
+    printToTerminal("• ARCHITECT NETWORK: Claude & Gemini Core Sync", "log-system");
+    printToTerminal("==================================", "log-system");
 }
 
 function triggerGeminiProtocol() {
     AudioEngine.playGeminiChime();
+    printToTerminal("✨ [ CODENAME: GEMINI PROTOCOL ENGAGED ] ✨", "log-info");
+    printToTerminal(">> Establishing high-tier link with Google Neural Grid.", "log-info");
+    printToTerminal(">> Custom UI element layout color shift: NEON BLUE ACTIVE.", "log-info");
+    
     document.body.style.transition = "background-color 0.8s ease";
-    document.body.style.backgroundColor = "#000814";
+    document.body.style.backgroundColor = "#000a1a";
     document.documentElement.style.setProperty('--accent', '#00b4d8');
     
     const profile = document.querySelector('.operator-profile');
     if (profile) {
         profile.style.transition = "all 0.8s ease";
         profile.style.borderColor = "#00b4d8";
-        profile.style.boxShadow = "0 0 30px rgba(0, 180, 216, 0.4)";
+        profile.style.boxShadow = "0 0 25px rgba(0, 180, 216, 0.35)";
     }
-    alert("✨ [ CODENAME: GEMINI ACCEPTED ] ✨\n\n>> Neural AI network link established.\n>> Custom UI layer overwritten in deep neon blue.");
     setTimeout(() => {
         document.body.style.backgroundColor = "#050505";
         document.documentElement.style.setProperty('--accent', '#39ff14');
@@ -330,21 +337,24 @@ function triggerGeminiProtocol() {
 
 function triggerExposeProtocol() {
     AudioEngine.playExposeGlitch();
+    printToTerminal("⚠️ [ FUTURE COUNTDOWN THREAT TRACKED ] ⚠️", "log-warning");
+    printToTerminal(">> Lyrical Warning Matrix deployed to subject Carl.", "log-warning");
+    printToTerminal(">> 'Just wait... because I’m making an exposed video.'", "log-warning");
     document.body.style.transition = "background-color 0.2s";
-    document.body.style.backgroundColor = "#3a3000";
+    document.body.style.backgroundColor = "#332b00";
     document.documentElement.style.setProperty('--accent', '#ffea00');
     setTimeout(() => {
-        alert("⚠️ [ CRITICAL WARNING DELIVERED ] ⚠️\n\n>> 'Just wait... because I’m making an exposed video in the future.'\n>> Future compilation layout countdown initialized.");
         document.body.style.backgroundColor = "#050505";
         document.documentElement.style.setProperty('--accent', '#39ff14');
-    }, 300);
+    }, 500);
 }
 
 function triggerMatrixProtocol() {
     AudioEngine.playMatrixSweep();
+    printToTerminal("⚡ [ CENTRAL MATRIX OVERRIDE RUNNING ] ⚡", "log-system");
+    printToTerminal(">> Purging subject database... Carl authority files dropped to zero.", "log-system");
     document.documentElement.style.setProperty('--accent', '#00ff00');
-    document.body.style.backgroundColor = "#001a00";
-    alert("⚡ [ MATRIX OVERRIDE SEQUENCE ] ⚡\n\nYou are inside the mainframe. Carl's leverage has been fully deleted from the central directory.");
+    document.body.style.backgroundColor = "#001f00";
     setTimeout(() => {
         document.body.style.backgroundColor = "#050505";
         document.documentElement.style.setProperty('--accent', '#39ff14');
@@ -353,34 +363,57 @@ function triggerMatrixProtocol() {
 
 function triggerTuffProtocol() {
     AudioEngine.playFailTone();
-    alert("❌ [ EVALUATION COMPLETE ] ❌\n\nResult: Bro is confirmed NOT tuff.\n Meltdown over a pen has critically compromised the subject's posture matrix.");
+    printToTerminal("❌ [ SCANNER RESPONSE COMPLETE ] ❌", "log-error");
+    printToTerminal(">> Evaluating subject posture database...", "log-error");
+    printToTerminal(">> Result: Bro is officially confirmed NOT tuff.", "log-error");
 }
 
 // ==========================================
-// MOBILE TERMINAL USER INTERFACE INPUT
+// INTERACTIVE INPUT FIELD CONNECTOR (CLI)
 // ==========================================
 const mobileInput = document.getElementById('terminal-input');
 
 if (mobileInput) {
-    mobileInput.addEventListener('input', (e) => {
-        AudioEngine.playClick();
-        const text = e.target.value.toLowerCase().trim();
-        
-        if (text === 'pen') { triggerPenMeltdown(); e.target.value = ''; } 
-        else if (text === 'crash') { triggerCrash(); e.target.value = ''; } 
-        else if (text === 'iponan') { triggerIponanSuccess(); e.target.value = ''; }
-        else if (text === 'claude') { triggerClaudeSignature(); e.target.value = ''; }
-        else if (text === 'voidrun') { triggerVoidRunDashboard(); e.target.value = ''; }
-        else if (text === 'konami') { triggerKonamiDossier(); e.target.value = ''; }
-        else if (text === 'gemini') { triggerGeminiProtocol(); e.target.value = ''; }
-        else if (text === 'expose') { triggerExposeProtocol(); e.target.value = ''; }
-        else if (text === 'matrix') { triggerMatrixProtocol(); e.target.value = ''; }
-        else if (text === 'tuff') { triggerTuffProtocol(); e.target.value = ''; }
+    mobileInput.addEventListener('keydown', (e) => {
+        // Execute command submission upon pressing Enter
+        if (e.key === 'Enter') {
+            AudioEngine.playClick();
+            const text = mobileInput.value.trim();
+            
+            if (text !== '') {
+                printToTerminal(text, "log-user");
+                
+                // Track into history log buffer
+                commandHistory.push(text);
+                historyIndex = commandHistory.length;
+                
+                evaluateBuffer(text, false);
+            }
+            mobileInput.value = ''; 
+        }
+        // REAL CLI AUTHENTICITY CYCLE: Command recall array up/down arrows
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (commandHistory.length > 0 && historyIndex > 0) {
+                historyIndex--;
+                mobileInput.value = commandHistory[historyIndex];
+            }
+        }
+        else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (commandHistory.length > 0 && historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                mobileInput.value = commandHistory[historyIndex];
+            } else if (historyIndex === commandHistory.length - 1) {
+                historyIndex = commandHistory.length;
+                mobileInput.value = '';
+            }
+        }
     });
 }
 
 // ==========================================
-// DESKTOP PHYSICAL CONTROLLER LOGIC (KEYS)
+// 10-KEY CONTROLLER SYSTEM DIRECTORY (KONAMI)
 // ==========================================
 const konamiCode = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
 let konamiIndex = 0;
@@ -399,7 +432,8 @@ window.addEventListener('keydown', (e) => {
 
 function triggerKonamiDossier() {
     AudioEngine.playAlert();
-    document.body.style.backgroundColor = "#330000";
+    printToTerminal("⚠️ CORRUPT CONSOLE OVERRIDE: INJECTING OUT-OF-BOUNDS DOSSIER DIALOGUE.", "log-error");
+    document.body.style.backgroundColor = "#2b0000";
     setTimeout(() => { document.body.style.backgroundColor = "#050505"; }, 200);
     const modal = document.getElementById('dossier-modal');
     if (modal) modal.style.display = 'flex';
@@ -409,15 +443,18 @@ function closeDossier() {
     AudioEngine.playClick();
     const modal = document.getElementById('dossier-modal');
     if (modal) modal.style.display = 'none';
+    printToTerminal("Dossier connection terminated securely.", "log-system");
 }
 
 // ==========================================
-// DIRECT LOCAL TEXT ARCHIVE FETCH PIPELINE
+// DIRECT REPOSITORY ARCHIVE FILE PIPELINE
 // ==========================================
 const downBtn = document.getElementById('download-btn');
 if (downBtn) {
     downBtn.addEventListener('click', () => {
         AudioEngine.playClick();
+        printToTerminal("Requesting secure server-side file access... downloading log.", "log-system");
+        
         const silentLink = document.createElement('a');
         silentLink.href = 'bro is not tuff.txt'; 
         silentLink.download = 'bro is not tuff.txt'; 
