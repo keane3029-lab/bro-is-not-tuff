@@ -382,79 +382,21 @@ function closeDossier() {
     if (modal) modal.style.display = 'none';
 }
 
-// ============================================================================
-// TEXT ARCHIVE LOCAL FILE COMPILER (.txt)
-// ============================================================================
+// ==========================================
+// DIRECT LOCAL TEXT ARCHIVE FETCH PIPELINE (.txt)
+// ==========================================
 const downBtn = document.getElementById('download-btn');
 if (downBtn) {
     downBtn.addEventListener('click', () => {
         AudioEngine.playClick();
         
-        const logContent = 
-`======================================================================
-         VOIDRUN SYSTEMS // DECRYPTED SECURE RECORD ARCHIVE           
-  CASE DATA: "BRO IS NOT TUFF" (THE COMPLETE UNREDACTED SAGA)        
-  STATION TIMELINE: MIJS CORE RECORDS -> IPONAN GRADE 5 UPGRADE        
-======================================================================
-
-[OPERATOR SIGNATURE]: VOIDRUN
-[SYSTEM ARCHITECT]: CLAUDE // ANTHROPIC CO-DEVEL
-[SYSTEM INTEL NODE]: GEMINI // GOOGLE NEURAL GRID
-[CLEARANCE LEVEL]: UNRESTRICTED CORE ACCESS
-
-----------------------------------------------------------------------
-HISTORICAL TIMELINE ENTRIES:
-----------------------------------------------------------------------
-
-[PHASE 1: THE ANTHEM]
-Location: Mary Infant Jesus School (MIJS) // Grade 4 Sector
-Summary: Operator VoidRun drops the viral underground track "Bro is Not Tuff." 
-The lyrical content actively exposes the artificial toughness and bullying tactics 
-displayed by the subject, Carl. The anthem spreads across the network instantly.
-
-[PHASE 2: THE HALLWAY CONFRONTATION]
-Location: MIJS Main Hallway Block
-Summary: Subject Carl attempts a physical interception. Cornered and panicked, 
-Carl attempts a throat-grab maneuver to force a takedown of the audio files. 
-The intimidation protocol fails. Operator stands firm. The track remains live.
-
-[PHASE 3: THE MELTDOWN OVER STATIONERY]
-Location: Classroom Grid
-Summary: Subject Carl undergoes a catastrophic behavioral spiral. The self-proclaimed 
-"tuff guy" loses complete emotional stability and throws a massive public screaming 
-meltdown... over a missing pen. Hypocrisy completely verified by school sensors.
-
-[PHASE 4: THE OFFICE INTERCEPT]
-Location: Principal's Office Approach
-Summary: VoidRun moves to file an official diagnostic report. Carl attempts a secondary 
-ambush but stops dead in his tracks. VoidRun is flanked by a tight wall of teammates. 
-Counter-measure successful. VoidRun deploys a high-frequency psychological weapon: 
-laughing in his face. Carl is completely immobilized.
-
-[PHASE 5: THE SEQUEL DEPLOYMENT]
-Location: VoidRun Studios Production Branch
-Summary: "Bro is Not Tuff: Part 2" is compiled and mixed. The new tracking layers 
-immortalize the hallway attack, the fake victim routine, and the legendary pen meltdown 
-into permanent musical storage. Carl's leverage is completely neutralized.
-
-[PHASE 6: THE TERMINAL STATEMENT]
-Summary: Final interaction log recorded. VoidRun passes the subject with a final warning: 
-"I am never taking these down. Just wait... because I'm making an exposed video." 
-Subject's systemic influence, reputation, and authority set to 0.
-
-----------------------------------------------------------------------
-[DIAGNOSTIC STATUS]: COMPILATION COMPLETE
-[METADATA]: NO ERRORS DETECTED. THE ARCHIVE STAYS ONLINE PERMANENTLY.
-======================================================================`;
-
-        const dataBlob = new Blob([logContent], { type: 'text/plain' });
-        const pointerUrl = URL.createObjectURL(dataBlob);
+        // Deploys a direct server call to your uploaded repository file
         const silentLink = document.createElement('a');
-        silentLink.href = pointerUrl;
-        silentLink.download = 'bro_is_not_tuff_archive.txt'; 
+        silentLink.href = 'bro is not tuff.txt'; 
+        silentLink.download = 'bro is not tuff.txt'; 
+        
         document.body.appendChild(silentLink);
         silentLink.click(); 
         document.body.removeChild(silentLink);
-        URL.revokeObjectURL(pointerUrl);
     });
 }
